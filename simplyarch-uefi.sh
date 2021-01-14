@@ -115,17 +115,11 @@ then
 		swapon $swap
 	fi
 	clear
-	# install reflector
-	pacman -Sy reflector --noconfirm
-	clear
 	# update mirrors
-	echo
-	echo "Simple Reflector by SimplyArch"
-	echo
-	reflector --verbose --protocol http --protocol https --latest 20 --sort rate --save /etc/pacman.d/mirrorlist
+	./simple_reflector.sh
 	clear
 	# Install base system
-	pacstrap /mnt base base-devel linux linux-firmware linux-headers grub efibootmgr os-prober bash-completion sudo nano vim networkmanager ntfs-3g neofetch htop git reflector xdg-user-dirs
+	pacstrap /mnt base base-devel linux linux-firmware linux-headers grub efibootmgr os-prober bash-completion sudo nano vim networkmanager ntfs-3g neofetch htop git reflector xdg-user-dirs e2fsprogs man
 	# Fstab
 	genfstab -U /mnt >> /mnt/etc/fstab
 	# configure base system
@@ -161,10 +155,7 @@ then
 	arch-chroot /mnt sed -i 's/# %wheel ALL=(ALL) ALL/%wheel ALL=(ALL) ALL/' /etc/sudoers
 	arch-chroot /mnt /bin/bash -c "xdg-user-dirs-update"
 	# update mirrors
-	echo "echo" > /mnt/home/$user/simple_reflector.sh
-	echo "echo ""Simple Reflector by SimplyArch""" >> /mnt/home/$user/simple_reflector.sh
-	echo "echo" >> /mnt/home/$user/simple_reflector.sh
-	echo "reflector --verbose --protocol http --protocol https --latest 20 --sort rate --save /etc/pacman.d/mirrorlist" >> /mnt/home/$user/simple_reflector.sh
+	cp ./simple_reflector.sh /mnt/home/$user/simple_reflector.sh
 	arch-chroot /mnt /bin/bash -c "chmod +x /home/$user/simple_reflector.sh"
 	arch-chroot /mnt /bin/bash -c "/home/$user/simple_reflector.sh"
 	clear
