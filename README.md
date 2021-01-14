@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://github.com/victor-bayas/simplyarch">
-    <img src="simply-laptop.png" alt="laptop-mockup" height="200">
+    <img src="img/laptop.png" alt="laptop-mockup" height="200">
   </a>
   <h1 align="center">SimplyArch Installer</h1>
   <p align="center">
