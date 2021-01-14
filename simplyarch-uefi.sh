@@ -116,7 +116,7 @@ then
 	fi
 	clear
 	# update mirrors
-	./simple_reflector.sh
+	simple_reflector.sh
 	clear
 	# Install base system
 	pacstrap /mnt base base-devel linux linux-firmware linux-headers grub efibootmgr os-prober bash-completion sudo nano vim networkmanager ntfs-3g neofetch htop git reflector xdg-user-dirs e2fsprogs man
@@ -155,7 +155,7 @@ then
 	arch-chroot /mnt sed -i 's/# %wheel ALL=(ALL) ALL/%wheel ALL=(ALL) ALL/' /etc/sudoers
 	arch-chroot /mnt /bin/bash -c "xdg-user-dirs-update"
 	# update mirrors
-	cp ./simple_reflector.sh /mnt/home/$user/simple_reflector.sh
+	cp simple_reflector.sh /mnt/home/$user/simple_reflector.sh
 	arch-chroot /mnt /bin/bash -c "chmod +x /home/$user/simple_reflector.sh"
 	arch-chroot /mnt /bin/bash -c "/home/$user/simple_reflector.sh"
 	clear
