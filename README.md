@@ -1,5 +1,13 @@
-# SimplyArch Installer 🚀
-The simplest way to install a base Arch Linux system, *no bloat included*.
+<p align="center">
+  <a href="https://github.com/victor-bayas/simplyarch">
+    <img src="simply-laptop.png" alt="laptop-mockup" height="200">
+  </a>
+  <h1 align="center">SimplyArch Installer</h1>
+  <p align="center">
+    The simplest way to install a base Arch Linux system without the bloat
+  </p>
+</p>
+
 ## Disclaimer
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 EXPRESS OR IMPLIED
