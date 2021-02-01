@@ -137,14 +137,14 @@ then
 	sed -i '93d' /mnt/etc/pacman.conf
 	sed -i '94d' /mnt/etc/pacman.conf
 	sed -i "93i [multilib]" /mnt/etc/pacman.conf
-	sed -i "94i Include = /etc/pacman.d/mirrorlist" /mnt/etc/pacman.conf
+	sed -i "94i Include = /etc/pacman.d/mirrorlist" /mnt/etc/pacman.co
 	# hostname
 	echo "$hostname" > /mnt/etc/hostname
 	echo "127.0.0.1	localhost" > /mnt/etc/hosts
 	echo "::1		localhost" >> /mnt/etc/hosts
 	echo "127.0.1.1	$hostname.localdomain	$hostname" >> /mnt/etc/hosts
 	# grub
-	arch-chroot /mnt /bin/bash -c "grub-install $grub"
+	arch-chroot /mnt /bin/bash -c "grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=arch --recheck"
 	arch-chroot /mnt /bin/bash -c "grub-mkconfig -o /boot/grub/grub.cfg"
 	# networkmanager
 	arch-chroot /mnt /bin/bash -c "systemctl enable NetworkManager.service"
