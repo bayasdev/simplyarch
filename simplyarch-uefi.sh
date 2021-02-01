@@ -78,7 +78,7 @@ then
 	read -p "Root partition: " rootPart
 	mkfs.ext4 $rootPart
 	mount $rootPart /mnt
-	mkdir -p /mnt/boot/efi
+	mkdir -p /mnt/boot
 	clear
 	echo "Partition Table"
 	echo
@@ -93,9 +93,8 @@ then
 	then
 		mkfs.fat -F32 $efiPart
 	fi
-	mount $efiPart /mnt/boot/efi
+	mount $efiPart /mnt/boot
 	echo
-	read -p "Where do you want to install GRUB (e.g. /dev/sda): " grub
 	clear
 	echo "Partition Table"
 	echo
