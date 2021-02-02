@@ -22,13 +22,21 @@ then
 	echo
 	echo "EXAMPLES:"
 	echo "us United States | us-acentos US Intl | latam Latin American Spanish | es Spanish"
-	read -p "Keyboard layout: " keyboard 
+	read -p "Keyboard layout: " keyboard
+	if [ $keyboard == "" ]
+	then
+		keyboard="us"
+	fi
 	#echo
 	#echo "EXAMPLES: America/New_York | Europe/Berlin"
 	#read -p "Timezone: " timezone
 	echo
 	echo "EXAMPLES: en_US.UTF-8 | es_EC.UTF-8"
 	read -p "Locale: " locale
+	if [ $locale == "" ]
+	then
+		locale="en_US.UTF-8"
+	fi
 	clear
 	# Ask account
 	echo "Account Setup"
@@ -88,15 +96,13 @@ then
 	if [ $bootType == "efi" ]
 	then
 		mkdir -p /mnt/boot/efi
-	else
-		mkdir /mnt/boot
 	fi
 	clear
 	echo "Partition Table"
 	echo
 	lsblk
 	echo
-	echo "Write the name of the partition e.g: /dev/sdaX /dev/nvme0n1pX"
+	echo "Write the name of the partition e.g: (/dev/sdaX or /dev/nvme0n1pX) for UEFI or (/dev/sda or /dev/nvme0n1p) for Legacy"
 	read -p "EFI/Boot partition: " efiPart
 	echo
 	echo "DUALBOOT USERS: If you are sharing this EFI partition with another OS type N"
@@ -107,9 +113,6 @@ then
 		then
 			mkfs.fat -F32 $efiPart
 			mount $efiPart /mnt/boot/efi
-		else
-			mkfs.vfat $efiPart
-			mount $efiPart /mnt/boot
 		fi
 	fi
 	echo
@@ -138,6 +141,10 @@ then
 	clear
 	# Install base system
 	pacstrap /mnt base base-devel linux linux-firmware linux-headers grub efibootmgr os-prober bash-completion sudo nano vim networkmanager ntfs-3g neofetch htop git reflector xdg-user-dirs e2fsprogs man-db
+	if [ $bootType == "efi" ]
+	then 
+		pacstrap /mnt efibootmgr
+	fi
 	# Fstab
 	genfstab -U /mnt >> /mnt/etc/fstab
 	# configure base system
@@ -163,7 +170,7 @@ then
 	# grub
 	if [ $bootType == "efi" ]
 	then
-		arch-chroot /mnt /bin/bash -c "grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=arch --recheck"
+		arch-chroot /mnt /bin/bash -c "grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=Arch --recheck"
 	else
 		arch-chroot /mnt /bin/bash -c "grub-install $efiPart"
 	fi
