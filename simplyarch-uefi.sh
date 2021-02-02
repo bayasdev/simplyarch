@@ -85,7 +85,7 @@ then
 	echo
 	echo "EFI or Legacy Boot? efi or legacy"
 	read -p "Boot Type: " bootType
-	if [$bootType == "efi"]
+	if [ $bootType == "efi" ]
 	then
 		mkdir -p /mnt/boot/efi
 	else
@@ -103,7 +103,7 @@ then
 	read -p "Do you want to format this partition? (Y/N): " formatEFI
 	if [[ $formatEFI == "y" || $formatEFI == "Y" || $formatEFI == "yes" || $formatEFI == "Yes" ]]
 	then
-		if [$bootType == "efi"]
+		if [ $bootType == "efi" ]
 		then
 			mkfs.fat -F32 $efiPart
 			mount $efiPart /mnt/boot/efi
@@ -161,7 +161,7 @@ then
 	echo "::1		localhost" >> /mnt/etc/hosts
 	echo "127.0.1.1	$hostname.localdomain	$hostname" >> /mnt/etc/hosts
 	# grub
-	if [$bootType == "efi"]
+	if [ $bootType == "efi" ]
 	then
 		arch-chroot /mnt /bin/bash -c "grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=arch --recheck"
 	else
