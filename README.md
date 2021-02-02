@@ -15,12 +15,13 @@ EXPRESS OR IMPLIED
 - A working internet connection
 - **Being a somewhat advanced user**
 - A previously partitioned disk
-- **UEFI only** (no ETA for BIOS version)
+- **UEFI only** (BIOS version soon™)
 # What this script will do ✅
 - Install a functional base system
 - Setup your keyboard, locales, timezone and hostname
 - Create a standard user with sudo permissions
-- Install popular utilities such as `yay` `vim` `nano` `htop` `neofetch` and our `simple_reflector.sh` tool
+- Install popular utilities such as `vim` `nano` `htop` `neofetch` and our `simple_reflector.sh` tool
+- **(NEW)** Installs `paru` as the AUR helper instead of `yay`
 # What this script won't do 🚫
 - Install any driver not included within the kernel
 - Install a DE/WM or any GUI application

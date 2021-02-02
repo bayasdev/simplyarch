@@ -2,10 +2,11 @@
 clear
 echo
 echo "Welcome to SimplyArch Installer (UEFI)"
-echo "Copyleft 2021 Victor Bayas"
+echo "Copyright (C) 2021 Victor Bayas"
 echo
 echo "DISCLAIMER: THE SOFTWARE IS PROVIDED ""AS IS"", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED"
-echo "NOTE: Make sure to TYPE CORRECTLY because this script won't perform any user input validation"
+echo
+echo "WARNING: Make sure to TYPE CORRECTLY because this script won't perform any user input validation"
 echo
 echo "We'll guide you through the installation process of a functional base Arch Linux system"
 echo
@@ -18,7 +19,7 @@ then
 	#timedatectl set-ntp true
 	clear
 	# Ask locales
-	echo "Region & Language"
+	echo ">>> Region & Language <<<"
 	echo
 	echo "EXAMPLES:"
 	echo "us United States | us-acentos US Intl | latam Latin American Spanish | es Spanish"
@@ -27,11 +28,11 @@ then
 	#echo "EXAMPLES: America/New_York | Europe/Berlin"
 	#read -p "Timezone: " timezone
 	echo
-	echo "EXAMPLES: en_US.UTF-8 | es_EC.UTF-8"
+	echo "EXAMPLES: en_US | es_ES (don't add .UTF-8)"
 	read -p "Locale: " locale
 	clear
 	# Ask account
-	echo "Account Setup"
+	echo ">>> Account Setup <<<"
 	echo
 	read -p "Hostname: " hostname
 	echo
@@ -69,6 +70,11 @@ then
 		echo
 	done
 	# Disk setup
+	clear
+	echo ">>> Disks Setup <<<"
+	echo
+	echo "Make sure to have your disk previously partitioned, if you are unsure press CTRL+C and run this script again"
+	sleep 5
 	clear
 	echo "Partition Table"
 	echo
@@ -109,7 +115,7 @@ then
 	then
 		echo
 		echo "Swap partition not selected"
-		pause 1
+		sleep 1
 	else
 		mkswap $swap
 		swapon $swap
@@ -119,13 +125,17 @@ then
 	chmod +x simple_reflector.sh
 	./simple_reflector.sh
 	clear
+	echo ">>> Installing and configuring the base system <<<"
+	echo
+	echo "This process may take a while, please wait..."
+	sleep 1
 	# Install base system
-	pacstrap /mnt base base-devel linux linux-firmware linux-headers grub efibootmgr os-prober bash-completion sudo nano vim networkmanager ntfs-3g neofetch htop git reflector xdg-user-dirs e2fsprogs man
+	pacstrap /mnt base base-devel linux linux-firmware linux-headers grub efibootmgr os-prober bash-completion sudo nano vim networkmanager ntfs-3g neofetch htop git reflector xdg-user-dirs e2fsprogs man-db
 	# Fstab
 	genfstab -U /mnt >> /mnt/etc/fstab
 	# configure base system
 	# locales
-	echo "$locale UTF-8" > /mnt/etc/locale.gen
+	echo "$locale.UTF-8 UTF-8" >> /mnt/etc/locale.gen
 	arch-chroot /mnt /bin/bash -c "locale-gen" 
 	echo "LANG=$locale" > /mnt/etc/locale.conf
 	# timezone
@@ -161,8 +171,10 @@ then
 	arch-chroot /mnt /bin/bash -c "/home/$user/simple_reflector.sh"
 	clear
 	# yay
-	echo "Installing Yay..."
-	echo "cd && git clone https://aur.archlinux.org/yay-bin.git && cd yay-bin && makepkg -si --noconfirm && cd && rm -rf yay-bin" | arch-chroot /mnt /bin/bash -c "su $user"
+	echo ">>> Post-install routine <<<"
+	echo
+	echo "Installing the Paru AUR Helper..."
+	echo "cd && git clone https://aur.archlinux.org/paru-bin.git && cd paru-bin && makepkg -si --noconfirm && cd && rm -rf paru-bin" | arch-chroot /mnt /bin/bash -c "su $user"
 	clear
 	echo "SimplyArch Installer (UEFI)"
 	echo
