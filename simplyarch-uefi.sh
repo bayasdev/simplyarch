@@ -78,7 +78,7 @@ then
 	read -p "Root partition: " rootPart
 	mkfs.ext4 $rootPart
 	mount $rootPart /mnt
-	mkdir -p /mnt/boot
+	mkdir -p /mnt/boot/efi
 	clear
 	echo "Partition Table"
 	echo
@@ -93,7 +93,7 @@ then
 	then
 		mkfs.fat -F32 $efiPart
 	fi
-	mount $efiPart /mnt/boot
+	mount $efiPart /mnt/boot/efi
 	echo
 	clear
 	echo "Partition Table"
