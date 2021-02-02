@@ -23,7 +23,7 @@ then
 	echo "EXAMPLES:"
 	echo "us United States | us-acentos US Intl | latam Latin American Spanish | es Spanish"
 	read -p "Keyboard layout: " keyboard
-	if [ $keyboard == "" ]
+	if [ -z "$keyboard" ]
 	then
 		keyboard="us"
 	fi
@@ -33,7 +33,7 @@ then
 	echo
 	echo "EXAMPLES: en_US.UTF-8 | es_EC.UTF-8"
 	read -p "Locale: " locale
-	if [ $locale == "" ]
+	if [ -z "$locale" ]
 	then
 		locale="en_US.UTF-8"
 	fi
@@ -105,11 +105,11 @@ then
 	echo "Write the name of the partition e.g: (/dev/sdaX or /dev/nvme0n1pX) for UEFI or (/dev/sda or /dev/nvme0n1p) for Legacy"
 	read -p "EFI/Boot partition: " efiPart
 	echo
-	echo "DUALBOOT USERS: If you are sharing this EFI partition with another OS type N"
-	read -p "Do you want to format this partition? (Y/N): " formatEFI
-	if [[ $formatEFI == "y" || $formatEFI == "Y" || $formatEFI == "yes" || $formatEFI == "Yes" ]]
+	if [ $bootType == "efi" ]
 	then
-		if [ $bootType == "efi" ]
+		echo "DUALBOOT USERS: If you are sharing this EFI partition with another OS type N"
+		read -p "Do you want to format this partition? (Y/N): " formatEFI
+		if [[ $formatEFI == "y" || $formatEFI == "Y" || $formatEFI == "yes" || $formatEFI == "Yes" ]]
 		then
 			mkfs.fat -F32 $efiPart
 			mount $efiPart /mnt/boot/efi
