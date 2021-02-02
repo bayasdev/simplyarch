@@ -161,7 +161,7 @@ then
 	sed -i '93d' /mnt/etc/pacman.conf
 	sed -i '94d' /mnt/etc/pacman.conf
 	sed -i "93i [multilib]" /mnt/etc/pacman.conf
-	sed -i "94i Include = /etc/pacman.d/mirrorlist" /mnt/etc/pacman.co
+	sed -i "94i Include = /etc/pacman.d/mirrorlist" /mnt/etc/pacman.conf
 	# hostname
 	echo "$hostname" > /mnt/etc/hostname
 	echo "127.0.0.1	localhost" > /mnt/etc/hosts
