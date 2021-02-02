@@ -78,22 +78,40 @@ then
 	read -p "Root partition: " rootPart
 	mkfs.ext4 $rootPart
 	mount $rootPart /mnt
-	mkdir -p /mnt/boot/efi
+	clear
+	echo "Partition Table"
+	echo
+	lsblk
+	echo
+	echo "EFI or Legacy Boot? efi or legacy"
+	read -p "Boot Type: " bootType
+	if [$bootType == "efi"]
+	then
+		mkdir -p /mnt/boot/efi
+	else
+		mkdir /mnt/boot
+	fi
 	clear
 	echo "Partition Table"
 	echo
 	lsblk
 	echo
 	echo "Write the name of the partition e.g: /dev/sdaX /dev/nvme0n1pX"
-	read -p "EFI partition: " efiPart
+	read -p "EFI/Boot partition: " efiPart
 	echo
 	echo "DUALBOOT USERS: If you are sharing this EFI partition with another OS type N"
-	read -p "Do you want to format this partition as FAT32? (Y/N): " formatEFI
+	read -p "Do you want to format this partition? (Y/N): " formatEFI
 	if [[ $formatEFI == "y" || $formatEFI == "Y" || $formatEFI == "yes" || $formatEFI == "Yes" ]]
 	then
-		mkfs.fat -F32 $efiPart
+		if [$bootType == "efi"]
+		then
+			mkfs.fat -F32 $efiPart
+			mount $efiPart /mnt/boot/efi
+		else
+			mkfs.vfat $efiPart
+			mount $efiPart /mnt/boot
+		fi
 	fi
-	mount $efiPart /mnt/boot/efi
 	echo
 	clear
 	echo "Partition Table"
@@ -143,7 +161,12 @@ then
 	echo "::1		localhost" >> /mnt/etc/hosts
 	echo "127.0.1.1	$hostname.localdomain	$hostname" >> /mnt/etc/hosts
 	# grub
-	arch-chroot /mnt /bin/bash -c "grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=arch --recheck"
+	if [$bootType == "efi"]
+	then
+		arch-chroot /mnt /bin/bash -c "grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=arch --recheck"
+	else
+		arch-chroot /mnt /bin/bash -c "grub-install $efiPart"
+	fi
 	arch-chroot /mnt /bin/bash -c "grub-mkconfig -o /boot/grub/grub.cfg"
 	# networkmanager
 	arch-chroot /mnt /bin/bash -c "systemctl enable NetworkManager.service"
