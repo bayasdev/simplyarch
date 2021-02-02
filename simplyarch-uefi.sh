@@ -140,7 +140,7 @@ then
 	./simple_reflector.sh
 	clear
 	# Install base system
-	pacstrap /mnt base base-devel linux linux-firmware linux-headers grub efibootmgr os-prober bash-completion sudo nano vim networkmanager ntfs-3g neofetch htop git reflector xdg-user-dirs e2fsprogs man-db
+	pacstrap /mnt base base-devel linux linux-firmware linux-headers grub os-prober bash-completion sudo nano vim networkmanager ntfs-3g neofetch htop git reflector xdg-user-dirs e2fsprogs man-db
 	if [ $bootType == "efi" ]
 	then 
 		pacstrap /mnt efibootmgr
