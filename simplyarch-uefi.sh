@@ -193,7 +193,7 @@ then
 	# locales
 	echo "$locale.UTF-8 UTF-8" >> /mnt/etc/locale.gen
 	arch-chroot /mnt /bin/bash -c "locale-gen" 
-	echo "LANG=$locale" > /mnt/etc/locale.conf
+	echo "LANG=$locale.UTF-8" > /mnt/etc/locale.conf
 	# timezone
 	arch-chroot /mnt /bin/bash -c "ln -sf /usr/share/zoneinfo/$(curl https://ipapi.co/timezone) /etc/localtime"
 	arch-chroot /mnt /bin/bash -c "hwclock --systohc"
