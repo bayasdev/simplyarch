@@ -2,7 +2,7 @@
   <a href="https://github.com/victor-bayas/simplyarch">
     <img src="img/laptop.png" alt="laptop-mockup" height="200">
   </a>
-  <h1 align="center">SimplyArch Installer</h1>
+  <h1 align="center">SimplyArch Installer (UEFI & BIOS)</h1>
   <p align="center">
     The simplest way to install a base Arch Linux system without the bloat
   </p>
@@ -16,6 +16,9 @@ EXPRESS OR IMPLIED
 - **Being a somewhat advanced user**
 - A previously partitioned disk
 - **UEFI only** (BIOS version soon™)
+## Filesystem Support
+- EXT4
+- **(NEW)** Initial BRTS support (thanks [@lenuswalker](https://github.com/lenuswalker))
 # What this script will do ✅
 - Install a functional base system
 - Setup your keyboard, locales, timezone and hostname
