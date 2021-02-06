@@ -2,10 +2,11 @@
 clear
 echo
 echo "Welcome to SimplyArch Installer (UEFI)"
-echo "Copyleft 2021 Victor Bayas"
+echo "Copyright (C) 2021 Victor Bayas"
 echo
 echo "DISCLAIMER: THE SOFTWARE IS PROVIDED ""AS IS"", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED"
-echo "NOTE: Make sure to TYPE CORRECTLY because this script won't perform any user input validation"
+echo
+echo "WARNING: Make sure to TYPE CORRECTLY because this script won't perform any user input validation"
 echo
 echo "We'll guide you through the installation process of a functional base Arch Linux system"
 echo
@@ -18,11 +19,11 @@ then
 	#timedatectl set-ntp true
 	clear
 	# Ask locales
-	echo "Region & Language"
+	echo ">>> Region & Language <<<"
 	echo
 	echo "EXAMPLES:"
 	echo "us United States | us-acentos US Intl | latam Latin American Spanish | es Spanish"
-	read -p "Keyboard layout: " keyboard
+	read -p "Keyboard layout: " keyboard 
 	if [ -z "$keyboard" ]
 	then
 		keyboard="us"
@@ -31,15 +32,15 @@ then
 	#echo "EXAMPLES: America/New_York | Europe/Berlin"
 	#read -p "Timezone: " timezone
 	echo
-	echo "EXAMPLES: en_US.UTF-8 | es_EC.UTF-8"
+	echo "EXAMPLES: en_US | es_ES (don't add .UTF-8)"
 	read -p "Locale: " locale
 	if [ -z "$locale" ]
 	then
-		locale="en_US.UTF-8"
+		locale="en_US"
 	fi
 	clear
 	# Ask account
-	echo "Account Setup"
+	echo ">>> Account Setup <<<"
 	echo
 	read -p "Hostname: " hostname
 	echo
@@ -78,50 +79,85 @@ then
 	done
 	# Disk setup
 	clear
+	echo ">>> Disks Setup <<<"
+	echo
+	echo "Make sure to have your disk previously partitioned, if you are unsure press CTRL+C and run this script again"
+	sleep 5
+	clear
+	echo "Partition Table"
+	echo
+	lsblk
+	echo
+	while ! [[ "$partType" =~ ^(1|2)$ ]] 
+	do
+		echo "Please select partition type: e.g: 1 for EXT4 and 2 for BTRFS"
+		read -p "Partition Type: " partType
+	done
+	clear
 	echo "Partition Table"
 	echo
 	lsblk
 	echo
 	echo "Write the name of the partition e.g: /dev/sdaX /dev/nvme0n1pX"
 	read -p "Root partition: " rootPart
-	mkfs.ext4 $rootPart
-	mount $rootPart /mnt
+	case $partType in
+		1)
+			mkfs.ext4 $rootPart
+			mount $rootPart /mnt
+			;;
+		2)
+			mkfs.btrfs -L "Arch Linux" $rootPart
+			mount $rootPart /mnt
+			btrfs sub cr /mnt/_active
+			btrfs sub cr /mnt/_active/root
+			btrfs sub cr /mnt/_active/home
+			btrfs sub cr /mnt/_active/tmp
+			btrfs sub cr /mnt/_snapshots
+			umount /mnt
+			mount -o subvol=_active/root $rootPart /mnt
+			mkdir /mnt/{home,tmp,boot}
+			mkdir /mnt/mnt/defvol
+			mount -o subvol=_active/tmp $rootPart /mnt/tmp
+			mount -o subvol=_active/home $rootPart /mnt/home
+			mount -o subvol=/ $rootPart /mnt/mnt/defvol
+			;;
+	esac
 	clear
 	echo "Partition Table"
 	echo
 	lsblk
 	echo
-	echo "EFI or Legacy Boot? efi or legacy"
-	read -p "Boot Type: " bootType
-	if [ $bootType == "efi" ]
-	then
-		mkdir -p /mnt/boot/efi
-	fi
+	while ! [[ "$bootType" =~ ^(1|2)$ ]] 
+	do
+		echo "Please select boot type: e.g: 1 for UEFI and 2 for BIOS"
+		read -p "Partition Type: " bootType
+	done
 	clear
-	echo "Partition Table"
-	echo
-	lsblk
-	echo
-	echo "Write the name of the partition e.g: (/dev/sdaX or /dev/nvme0n1pX) for UEFI or (/dev/sda or /dev/nvme0n1p) for Legacy"
-	read -p "EFI/Boot partition: " efiPart
-	echo
-	if [ $bootType == "efi" ]
+	if [ $bootType == 1 ]
 	then
+		echo "Partition Table"
+		echo
+		lsblk
+		echo
+		echo "Write the name of the partition e.g: /dev/sdaX /dev/nvme0n1pX"
+		read -p "EFI partition: " efiPart
+		echo
 		echo "DUALBOOT USERS: If you are sharing this EFI partition with another OS type N"
-		read -p "Do you want to format this partition? (Y/N): " formatEFI
+		read -p "Do you want to format this partition as FAT32? (Y/N): " formatEFI
 		if [[ $formatEFI == "y" || $formatEFI == "Y" || $formatEFI == "yes" || $formatEFI == "Yes" ]]
 		then
 			mkfs.fat -F32 $efiPart
-			mount $efiPart /mnt/boot/efi
 		fi
+		mkdir -p /mnt/boot/efi
+		mount $efiPart /mnt/boot/efi
+		echo
+		clear
 	fi
-	echo
-	clear
 	echo "Partition Table"
 	echo
 	lsblk
 	echo
-	echo "NOTE: If you don't want to use a Swap partition type N above"
+	echo "NOTE: If you don't want to use a Swap partition type N below"
 	echo
 	echo "Write the name of the partition e.g: /dev/sdaX /dev/nvme0n1pX"
 	read -p "Swap partition: " swap
@@ -129,7 +165,7 @@ then
 	then
 		echo
 		echo "Swap partition not selected"
-		pause 1
+		sleep 1
 	else
 		mkswap $swap
 		swapon $swap
@@ -139,17 +175,23 @@ then
 	chmod +x simple_reflector.sh
 	./simple_reflector.sh
 	clear
+	echo ">>> Installing and configuring the base system <<<"
+	echo
+	echo "This process may take a while, please wait..."
+	sleep 1
 	# Install base system
-	pacstrap /mnt base base-devel linux linux-firmware linux-headers grub os-prober bash-completion sudo nano vim networkmanager ntfs-3g neofetch htop git reflector xdg-user-dirs e2fsprogs man-db
-	if [ $bootType == "efi" ]
-	then 
-		pacstrap /mnt efibootmgr
+	if [ $bootType == 1 ]
+	then
+		pacstrap /mnt base base-devel linux linux-firmware linux-headers grub efibootmgr os-prober bash-completion sudo nano vim networkmanager ntfs-3g neofetch htop git reflector xdg-user-dirs e2fsprogs man-db
+	else
+		pacstrap /mnt base base-devel linux linux-firmware linux-headers grub os-prober bash-completion sudo nano vim networkmanager ntfs-3g neofetch htop git reflector xdg-user-dirs e2fsprogs man-db
 	fi
 	# Fstab
 	genfstab -U /mnt >> /mnt/etc/fstab
+	vim /mnt/etc/fstab
 	# configure base system
 	# locales
-	echo "$locale UTF-8" > /mnt/etc/locale.gen
+	echo "$locale.UTF-8 UTF-8" >> /mnt/etc/locale.gen
 	arch-chroot /mnt /bin/bash -c "locale-gen" 
 	echo "LANG=$locale" > /mnt/etc/locale.conf
 	# timezone
@@ -168,11 +210,11 @@ then
 	echo "::1		localhost" >> /mnt/etc/hosts
 	echo "127.0.1.1	$hostname.localdomain	$hostname" >> /mnt/etc/hosts
 	# grub
-	if [ $bootType == "efi" ]
+	if [ $bootType == 1 ]
 	then
-		arch-chroot /mnt /bin/bash -c "grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=Arch --recheck"
+		grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=Arch
 	else
-		arch-chroot /mnt /bin/bash -c "grub-install $efiPart"
+		arch-chroot /mnt /bin/bash -c "grub-install ${rootPart::-1}"
 	fi
 	arch-chroot /mnt /bin/bash -c "grub-mkconfig -o /boot/grub/grub.cfg"
 	# networkmanager
@@ -190,8 +232,10 @@ then
 	arch-chroot /mnt /bin/bash -c "/home/$user/simple_reflector.sh"
 	clear
 	# yay
-	echo "Installing Yay..."
-	echo "cd && git clone https://aur.archlinux.org/yay-bin.git && cd yay-bin && makepkg -si --noconfirm && cd && rm -rf yay-bin" | arch-chroot /mnt /bin/bash -c "su $user"
+	echo ">>> Post-install routine <<<"
+	echo
+	echo "Installing the Paru AUR Helper..."
+	echo "cd && git clone https://aur.archlinux.org/paru-bin.git && cd paru-bin && makepkg -si --noconfirm && cd && rm -rf paru-bin" | arch-chroot /mnt /bin/bash -c "su $user"
 	clear
 	echo "SimplyArch Installer (UEFI)"
 	echo
