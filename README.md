@@ -18,7 +18,7 @@ EXPRESS OR IMPLIED
 - **UEFI only** (BIOS version soon™)
 ## Filesystem Support
 - EXT4
-- **(NEW)** Initial BRTS support (thanks [@lenuswalker](https://github.com/lenuswalker))
+- **(NEW)** Initial BTRFS support (thanks [@lenuswalker](https://github.com/lenuswalker))
 # What this script will do ✅
 - Install a functional base system
 - Setup your keyboard, locales, timezone and hostname

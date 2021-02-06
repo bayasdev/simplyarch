@@ -106,7 +106,7 @@ then
 			mount $rootPart /mnt
 			;;
 		2)
-			mkfs.btrfs -L "Arch Linux" $rootPart
+			mkfs.btrfs -f -L "Arch Linux" $rootPart
 			mount $rootPart /mnt
 			btrfs sub cr /mnt/@
 			umount $rootPart
