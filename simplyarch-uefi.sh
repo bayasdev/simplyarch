@@ -108,18 +108,13 @@ then
 		2)
 			mkfs.btrfs -L "Arch Linux" $rootPart
 			mount $rootPart /mnt
-			btrfs sub cr /mnt/_active
-			btrfs sub cr /mnt/_active/root
-			btrfs sub cr /mnt/_active/home
-			btrfs sub cr /mnt/_active/tmp
-			btrfs sub cr /mnt/_snapshots
-			umount /mnt
-			mount -o subvol=_active/root $rootPart /mnt
-			mkdir /mnt/{home,tmp,boot}
-			mkdir /mnt/mnt/defvol
-			mount -o subvol=_active/tmp $rootPart /mnt/tmp
-			mount -o subvol=_active/home $rootPart /mnt/home
-			mount -o subvol=/ $rootPart /mnt/mnt/defvol
+			btrfs sub cr /mnt/@
+			btrfs sub cr /mnt/@snapshots
+			umount $rootPart
+			mount -o relatime,space_cache=v2,compress=lzo,subvol=@ $rootPart /mnt
+			mkdir /mnt/.snapshots
+			mkdir /mnt/boot
+			mount -o relatime,space_cache=v2,compress=lzo,subvol=@snapshots $rootPart /mnt/.snapshots
 			;;
 	esac
 	clear
