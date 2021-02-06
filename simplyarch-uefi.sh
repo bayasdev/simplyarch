@@ -24,12 +24,20 @@ then
 	echo "EXAMPLES:"
 	echo "us United States | us-acentos US Intl | latam Latin American Spanish | es Spanish"
 	read -p "Keyboard layout: " keyboard 
+	if [ -z "$keyboard" ]
+	then
+		keyboard="us"
+	fi
 	#echo
 	#echo "EXAMPLES: America/New_York | Europe/Berlin"
 	#read -p "Timezone: " timezone
 	echo
 	echo "EXAMPLES: en_US | es_ES (don't add .UTF-8)"
 	read -p "Locale: " locale
+	if [ -z "$locale" ]
+	then
+		locale="en_US"
+	fi
 	clear
 	# Ask account
 	echo ">>> Account Setup <<<"
@@ -80,34 +88,68 @@ then
 	echo
 	lsblk
 	echo
+	while ! [[ "$partType" =~ ^(1|2)$ ]] 
+	do
+		echo "Please select partition type: e.g: 1 for EXT4 and 2 for BTRFS"
+		read -p "Partition Type: " partType
+	done
+	clear
+	echo "Partition Table"
+	echo
+	lsblk
+	echo
 	echo "Write the name of the partition e.g: /dev/sdaX /dev/nvme0n1pX"
 	read -p "Root partition: " rootPart
-	mkfs.ext4 $rootPart
-	mount $rootPart /mnt
-	mkdir -p /mnt/boot/efi
+	case $partType in
+		1)
+			mkfs.ext4 $rootPart
+			mount $rootPart /mnt
+			;;
+		2)
+			mkfs.btrfs -L "Arch Linux" $rootPart
+			mount $rootPart /mnt
+			btrfs sub cr /mnt/@
+			umount $rootPart
+			mount -o relatime,space_cache=v2,compress=lzo,subvol=@ $rootPart /mnt
+			mkdir /mnt/boot
+			;;
+	esac
 	clear
 	echo "Partition Table"
 	echo
 	lsblk
 	echo
-	echo "Write the name of the partition e.g: /dev/sdaX /dev/nvme0n1pX"
-	read -p "EFI partition: " efiPart
-	echo
-	echo "DUALBOOT USERS: If you are sharing this EFI partition with another OS type N"
-	read -p "Do you want to format this partition as FAT32? (Y/N): " formatEFI
-	if [[ $formatEFI == "y" || $formatEFI == "Y" || $formatEFI == "yes" || $formatEFI == "Yes" ]]
+	while ! [[ "$bootType" =~ ^(1|2)$ ]] 
+	do
+		echo "Please select boot type: e.g: 1 for UEFI and 2 for BIOS"
+		read -p "Partition Type: " bootType
+	done
+	clear
+	if [ $bootType == 1 ]
 	then
-		mkfs.fat -F32 $efiPart
+		echo "Partition Table"
+		echo
+		lsblk
+		echo
+		echo "Write the name of the partition e.g: /dev/sdaX /dev/nvme0n1pX"
+		read -p "EFI partition: " efiPart
+		echo
+		echo "DUALBOOT USERS: If you are sharing this EFI partition with another OS type N"
+		read -p "Do you want to format this partition as FAT32? (Y/N): " formatEFI
+		if [[ $formatEFI == "y" || $formatEFI == "Y" || $formatEFI == "yes" || $formatEFI == "Yes" ]]
+		then
+			mkfs.fat -F32 $efiPart
+		fi
+		mkdir -p /mnt/boot/efi
+		mount $efiPart /mnt/boot/efi
+		echo
+		clear
 	fi
-	mount $efiPart /mnt/boot/efi
-	echo
-	read -p "Where do you want to install GRUB (e.g. /dev/sda): " grub
-	clear
 	echo "Partition Table"
 	echo
 	lsblk
 	echo
-	echo "NOTE: If you don't want to use a Swap partition type N above"
+	echo "NOTE: If you don't want to use a Swap partition type N below"
 	echo
 	echo "Write the name of the partition e.g: /dev/sdaX /dev/nvme0n1pX"
 	read -p "Swap partition: " swap
@@ -130,14 +172,20 @@ then
 	echo "This process may take a while, please wait..."
 	sleep 1
 	# Install base system
-	pacstrap /mnt base base-devel linux linux-firmware linux-headers grub efibootmgr os-prober bash-completion sudo nano vim networkmanager ntfs-3g neofetch htop git reflector xdg-user-dirs e2fsprogs man-db
+	if [ $bootType == 1 ]
+	then
+		pacstrap /mnt base base-devel linux linux-firmware linux-headers grub efibootmgr os-prober bash-completion sudo nano vim networkmanager ntfs-3g neofetch htop git reflector xdg-user-dirs e2fsprogs man-db
+	else
+		pacstrap /mnt base base-devel linux linux-firmware linux-headers grub os-prober bash-completion sudo nano vim networkmanager ntfs-3g neofetch htop git reflector xdg-user-dirs e2fsprogs man-db
+	fi
 	# Fstab
 	genfstab -U /mnt >> /mnt/etc/fstab
+	nano /mnt/etc/fstab
 	# configure base system
 	# locales
 	echo "$locale.UTF-8 UTF-8" >> /mnt/etc/locale.gen
 	arch-chroot /mnt /bin/bash -c "locale-gen" 
-	echo "LANG=$locale" > /mnt/etc/locale.conf
+	echo "LANG=$locale.UTF-8" > /mnt/etc/locale.conf
 	# timezone
 	arch-chroot /mnt /bin/bash -c "ln -sf /usr/share/zoneinfo/$(curl https://ipapi.co/timezone) /etc/localtime"
 	arch-chroot /mnt /bin/bash -c "hwclock --systohc"
@@ -154,7 +202,12 @@ then
 	echo "::1		localhost" >> /mnt/etc/hosts
 	echo "127.0.1.1	$hostname.localdomain	$hostname" >> /mnt/etc/hosts
 	# grub
-	arch-chroot /mnt /bin/bash -c "grub-install $grub"
+	if [ $bootType == 1 ]
+	then
+		arch-chroot /mnt /bin/bash -c "grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=Arch"
+	else
+		arch-chroot /mnt /bin/bash -c "grub-install ${rootPart::-1}"
+	fi
 	arch-chroot /mnt /bin/bash -c "grub-mkconfig -o /boot/grub/grub.cfg"
 	# networkmanager
 	arch-chroot /mnt /bin/bash -c "systemctl enable NetworkManager.service"
