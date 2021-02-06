@@ -212,7 +212,7 @@ then
 	# grub
 	if [ $bootType == 1 ]
 	then
-		grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=Arch
+		arch-chroot /mnt /bin/bash -c "grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=Arch"
 	else
 		arch-chroot /mnt /bin/bash -c "grub-install ${rootPart::-1}"
 	fi
