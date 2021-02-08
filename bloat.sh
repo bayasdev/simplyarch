@@ -30,6 +30,11 @@ case $desktop in
         exit 0
         ;;
 esac
+# install vm video drivers
+if arch-chroot /mnt /bin/bash -c "grep -q ^flags.*\ hypervisor\  /proc/cpuinfo"
+then
+    pacstrap /mnt spice-vdagent xf86-video-qxl
+fi
 clear
 echo ">>> NVIDIA Support <<<"
 echo

@@ -178,7 +178,7 @@ then
 	else
 		pacstrap /mnt base base-devel linux linux-firmware linux-headers grub os-prober bash-completion sudo nano vim networkmanager ntfs-3g neofetch htop git reflector xdg-user-dirs e2fsprogs man-db
 	fi
-	# Fstab
+	# fstab
 	genfstab -U /mnt >> /mnt/etc/fstab
 	nano /mnt/etc/fstab
 	# configure base system
@@ -229,6 +229,7 @@ then
 	echo "Installing the Paru AUR Helper..."
 	echo "cd && git clone https://aur.archlinux.org/paru-bin.git && cd paru-bin && makepkg -si --noconfirm && cd && rm -rf paru-bin" | arch-chroot /mnt /bin/bash -c "su $user"
 	clear
+	# execute another script to add some bloat
 	echo ">>> Make Arch Bloated? <<<"
 	echo
 	echo "Do you want to install a Desktop Environment and other packages? (Y/N)"
