@@ -35,7 +35,7 @@ echo ">>> NVIDIA Support <<<"
 echo
 echo "Do you want to add NVIDIA support? (Y/N)"
 read -p "NVIDIA Support: " nvidia
-if [[ $nvidia == "y" || $nvidia == "Y" || $nvidia == "yes" || $nvidia== "Yes" ]]
+if [[ $nvidia == "y" || $nvidia == "Y" || $nvidia == "yes" || $nvidia == "Yes" ]]
 then
     pacstrap /mnt nvidia
 fi
