@@ -221,17 +221,6 @@ then
 	echo "Installing the Paru AUR Helper..."
 	echo "cd && git clone https://aur.archlinux.org/paru-bin.git && cd paru-bin && makepkg -si --noconfirm && cd && rm -rf paru-bin" | arch-chroot /mnt /bin/bash -c "su $user"
 	clear
-	# execute another script to add some bloat
-	echo ">>> Make Arch Bloated? <<<"
-	echo
-	echo "Do you want to install a Desktop Environment and other packages? (Y/N)"
-	read -p "Bloat: " bloat
-	if [[ $bloat == "y" || $bloat == "Y" || $bloat == "yes" || $bloat == "Yes" ]]
-	then
-		export user
-		/bin/bash bloat.sh
-	fi
-	clear
 	echo "SimplyArch Installer"
 	echo
 	echo ">>> Installation finished sucessfully <<<"
