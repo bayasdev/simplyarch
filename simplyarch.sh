@@ -172,7 +172,6 @@ then
 	fi
 	# fstab
 	genfstab -U /mnt >> /mnt/etc/fstab
-	nano /mnt/etc/fstab
 	# configure base system
 	# locales
 	echo "$locale.UTF-8 UTF-8" >> /mnt/etc/locale.gen
