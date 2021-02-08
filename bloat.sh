@@ -67,7 +67,7 @@ echo
 echo "Install my customs? (Y/N)"
 echo "These customs includes:"
 echo "- Flatpak Applications - libreoffice, geary, remmina, boxes & Gnome Applications if Gnome DE is selected"
-echo "- Aur Packages - timeshift (for snapshots), vscode, teams, displaylink"
+echo "- Aur Packages - timeshift (for snapshots), vscode, teams"
 read -p "My Customs: " custom
 if [[ $custom == "y" || $custom == "Y" || $custom == "yes" || $custom == "Yes" ]]
 then
@@ -78,6 +78,6 @@ then
     then
         arch-chroot /mnt /bin/bash -c "flatpak install flathub -y --noninteractive --app org.gnome.Boxes org.gnome.Geary org.libreoffice.LibreOffice org.remmina.Remmina"
     fi
-    echo "HOME=/home/$user; paru -Sy timeshift-bin visual-studio-code-bin teams displaylink --removemake --cleanafter --noconfirm" | arch-chroot /mnt /bin/bash -c "su $user"
+    echo "HOME=/home/$user; paru -Sy timeshift-bin visual-studio-code-bin teams --removemake --cleanafter --noconfirm" | arch-chroot /mnt /bin/bash -c "su $user"
 fi
 exit 0
