@@ -1,7 +1,7 @@
 #!/bin/bash
 clear
 echo
-echo "Welcome to SimplyArch Installer (UEFI)"
+echo "Welcome to SimplyArch Installer"
 echo "Copyright (C) 2021 Victor Bayas"
 echo
 echo "DISCLAIMER: THE SOFTWARE IS PROVIDED ""AS IS"", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED"
@@ -223,13 +223,22 @@ then
 	arch-chroot /mnt /bin/bash -c "chmod +x /home/$user/simple_reflector.sh"
 	arch-chroot /mnt /bin/bash -c "/home/$user/simple_reflector.sh"
 	clear
-	# yay
+	# paru
 	echo ">>> Post-install routine <<<"
 	echo
 	echo "Installing the Paru AUR Helper..."
 	echo "cd && git clone https://aur.archlinux.org/paru-bin.git && cd paru-bin && makepkg -si --noconfirm && cd && rm -rf paru-bin" | arch-chroot /mnt /bin/bash -c "su $user"
 	clear
-	echo "SimplyArch Installer (UEFI)"
+	echo ">>> Make Arch Bloated? <<<"
+	echo
+	echo "Do you want to install a Desktop Environment and other packages? (Y/N)"
+	read -p "Bloat: " bloat
+	if [[ $bloat == "y" || $bloat == "Y" || $bloat == "yes" || $bloat == "Yes" ]]
+	then
+		/bin/bash bloat.sh
+	fi
+	clear
+	echo "SimplyArch Installer"
 	echo
 	echo ">>> Installation finished sucessfully <<<"
 	echo
