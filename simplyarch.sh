@@ -228,6 +228,7 @@ then
 	read -p "Bloat: " bloat
 	if [[ $bloat == "y" || $bloat == "Y" || $bloat == "yes" || $bloat == "Yes" ]]
 	then
+		export user
 		/bin/bash bloat.sh
 	fi
 	clear
