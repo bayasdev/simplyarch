@@ -1,7 +1,7 @@
 #!/bin/bash
 clear
 echo
-echo "Welcome to SimplyArch Installer (UEFI)"
+echo "Welcome to SimplyArch Installer"
 echo "Copyright (C) 2021 Victor Bayas"
 echo
 echo "DISCLAIMER: THE SOFTWARE IS PROVIDED ""AS IS"", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED"
@@ -16,7 +16,6 @@ echo
 read -p "Do you want to continue? (Y/N): " prompt
 if [[ $prompt == "y" || $prompt == "Y" || $prompt == "yes" || $prompt == "Yes" ]]
 then
-	#timedatectl set-ntp true
 	clear
 	# Ask locales
 	echo ">>> Region & Language <<<"
@@ -28,9 +27,6 @@ then
 	then
 		keyboard="us"
 	fi
-	#echo
-	#echo "EXAMPLES: America/New_York | Europe/Berlin"
-	#read -p "Timezone: " timezone
 	echo
 	echo "EXAMPLES: en_US | es_ES (don't add .UTF-8)"
 	read -p "Locale: " locale
@@ -90,7 +86,9 @@ then
 	echo
 	while ! [[ "$partType" =~ ^(1|2)$ ]] 
 	do
-		echo "Please select partition type: e.g: 1 for EXT4 and 2 for BTRFS"
+		echo "Please select partition type (1/2):"
+		echo "1. EXT4"
+		echo "2. BTRFS"
 		read -p "Partition Type: " partType
 	done
 	clear
@@ -115,17 +113,7 @@ then
 			;;
 	esac
 	clear
-	echo "Partition Table"
-	echo
-	lsblk
-	echo
-	while ! [[ "$bootType" =~ ^(1|2)$ ]] 
-	do
-		echo "Please select boot type: e.g: 1 for UEFI and 2 for BIOS"
-		read -p "Partition Type: " bootType
-	done
-	clear
-	if [ $bootType == 1 ]
+	if [[ -d /sys/firmware/efi ]]
 	then
 		echo "Partition Table"
 		echo
@@ -172,15 +160,14 @@ then
 	echo "This process may take a while, please wait..."
 	sleep 1
 	# Install base system
-	if [ $bootType == 1 ]
+	if [[ -d /sys/firmware/efi ]]
 	then
 		pacstrap /mnt base base-devel linux linux-firmware linux-headers grub efibootmgr os-prober bash-completion sudo nano vim networkmanager ntfs-3g neofetch htop git reflector xdg-user-dirs e2fsprogs man-db
 	else
 		pacstrap /mnt base base-devel linux linux-firmware linux-headers grub os-prober bash-completion sudo nano vim networkmanager ntfs-3g neofetch htop git reflector xdg-user-dirs e2fsprogs man-db
 	fi
-	# Fstab
+	# fstab
 	genfstab -U /mnt >> /mnt/etc/fstab
-	nano /mnt/etc/fstab
 	# configure base system
 	# locales
 	echo "$locale.UTF-8 UTF-8" >> /mnt/etc/locale.gen
@@ -202,7 +189,7 @@ then
 	echo "::1		localhost" >> /mnt/etc/hosts
 	echo "127.0.1.1	$hostname.localdomain	$hostname" >> /mnt/etc/hosts
 	# grub
-	if [ $bootType == 1 ]
+	if [[ -d /sys/firmware/efi ]]
 	then
 		arch-chroot /mnt /bin/bash -c "grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=Arch"
 	else
@@ -223,13 +210,13 @@ then
 	arch-chroot /mnt /bin/bash -c "chmod +x /home/$user/simple_reflector.sh"
 	arch-chroot /mnt /bin/bash -c "/home/$user/simple_reflector.sh"
 	clear
-	# yay
+	# paru
 	echo ">>> Post-install routine <<<"
 	echo
 	echo "Installing the Paru AUR Helper..."
 	echo "cd && git clone https://aur.archlinux.org/paru-bin.git && cd paru-bin && makepkg -si --noconfirm && cd && rm -rf paru-bin" | arch-chroot /mnt /bin/bash -c "su $user"
 	clear
-	echo "SimplyArch Installer (UEFI)"
+	echo "SimplyArch Installer"
 	echo
 	echo ">>> Installation finished sucessfully <<<"
 	echo
