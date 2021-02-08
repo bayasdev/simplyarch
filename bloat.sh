@@ -74,7 +74,7 @@ if [[ $custom == "y" || $custom == "Y" || $custom == "yes" || $custom == "Yes" ]
 then
     if [[ $flatpak == "y" || $flatpak == "Y" || $flatpak == "yes" || $flatpak == "Yes" ]]
     then
-        arch-chroot /mnt /bin/bash -c "flatpak install flathub -y --noninteractive --app org.gnome.Boxes org.gnome.Calculator org.gnome.Calendar org.gnome.Characters org.gnome.clocks org.gnome.eog org.gnome.Epiphany org.gnome.Extensions org.gnome.Evince org.gnome.FileRoller org.gnome.font-viewer org.gnome.Geary org.gnome.gedit org.gnome.Logs org.gnome.Photos org.gnome.Totem org.gnome.Weather org.libreoffice.LibreOffice"
+        arch-chroot /mnt /bin/bash -c "flatpak install flathub -y --noninteractive --app org.gnome.Boxes org.gnome.Calculator org.gnome.Calendar org.gnome.Characters org.gnome.clocks org.gnome.Contacts org.gnome.eog org.gnome.Epiphany org.gnome.Extensions org.gnome.Evince org.gnome.FileRoller org.gnome.font-viewer org.gnome.Geary org.gnome.gedit org.gnome.Logs org.gnome.Photos org.gnome.Totem org.gnome.Weather org.libreoffice.LibreOffice"
     fi
     #arch-chroot -u $user /mnt /bin/bash -c "HOME=/home/$user; paru -Sy timeshift-bin visual-studio-code-bin teams displaylink --removemake --cleanafter --noconfirm"
     echo "HOME=/home/$user; paru -Sy timeshift-bin visual-studio-code-bin teams displaylink --removemake --cleanafter --noconfirm" | arch-chroot /mnt /bin/bash -c "su $user"
