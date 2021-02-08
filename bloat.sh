@@ -2,7 +2,7 @@
 clear
 echo ">>> Desktop Environment <<<"
 echo
-while ! [[ "$desktop" =~ ^(1|2|3|4|5|6)$ ]] 
+while ! [[ "$desktop" =~ ^(1|2|3|4|5|6|7)$ ]] 
 do
     echo "Please select 1,2,3,4,5,6,7 for:"
     echo "1. GNOME Minimal"
@@ -24,7 +24,7 @@ case $desktop in
     	arch-chroot /mnt /bin/bash -c "systemctl enable gdm.service"
     	;;
     3)
-        pacstrap /mnt sddm plasma plasma-wayland-session dolphin konsole kate kcalc ark gwenview spectacle okular packagekit-qt5
+        pacstrap /mnt sddm sddm-kcm plasma-desktop plasma-wayland-session discover dolphin kdedesignerplugin kde-gtk-config konsole kate kcalc ark gwenview spectacle okular packagekit-qt5
         arch-chroot /mnt /bin/bash -c "systemctl enable sddm.service"
         ;;
     4)
@@ -47,9 +47,12 @@ esac
 # install Firefox for all DE selections
 pacstrap /mnt firefox
 # install KVM video drivers
-if [[ $dekstop != "2" && arch-chroot /mnt /bin/bash -c "grep -q ^flags.*\ hypervisor\  /proc/cpuinfo" ]]
+if arch-chroot /mnt /bin/bash -c "grep -q ^flags.*\ hypervisor\  /proc/cpuinfo"
 then
-    pacstrap /mnt spice-vdagent xf86-video-qxl
+    if ! [[ $desktop == "2" ]]
+    then
+        pacstrap /mnt spice-vdagent xf86-video-qxl
+    fi
 fi
 clear
 echo ">>> NVIDIA Support <<<"
