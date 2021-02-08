@@ -4,18 +4,22 @@
   </a>
   <h1 align="center">SimplyArch Installer (UEFI & BIOS)</h1>
   <p align="center">
-    The simplest way to install a base Arch Linux system without the bloat
+    The simplest way to install a base Arch Linux system without the bloat¹
   </p>
 </p>
 
 ## Disclaimer
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 EXPRESS OR IMPLIED
+# ¹SimplyArch is officially bloated 🐌
+- Yes, we became what we swore to destroy
+- **Just kidding!** hit `7` when installation finishes and keep rolling 😇
+- ProTip: Review the choices `bloat.sh` makes for you
 # Pre-requisites 🔎
 - A working internet connection
 - **Being a somewhat advanced user**
 - A previously partitioned disk
-- **UEFI & BIOS**
+- **UEFI & BIOS autodetection**
 ## Filesystem Support
 - EXT4
 - **(NEW)** Initial BTRFS support (thanks [@lenuswalker](https://github.com/lenuswalker))
