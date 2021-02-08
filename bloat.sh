@@ -2,7 +2,7 @@
 clear
 echo ">>> Desktop Environment <<<"
 echo
-while ! [[ "$desktop" =~ ^(1|2|3|4)$ ]] 
+while ! [[ "$desktop" =~ ^(1|2|3|4|5|6)$ ]] 
 do
     echo "Please select 1,2,3,4,5,6 for:"
     echo "1. Gnome"
