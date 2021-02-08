@@ -29,9 +29,11 @@ case $desktop in
     4)
     	pacstrap /mnt sddm lxqt breeze-icons featherpad
     	arch-chroot /mnt /bin/bash -c "systemctl enable sddm.service"
+    	;;
     5)
     	pacstrap /mnt lxdm lxde leafpad galculator
     	arch-chroot /mnt /bin/bash -c "systemctl enable lxdm.service"
+    	;;
     6)
         echo "No desktop environment will be installed."
         exit 0
