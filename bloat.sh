@@ -2,39 +2,44 @@
 clear
 echo ">>> Desktop Environment <<<"
 echo
-while ! [[ "$desktop" =~ ^(1|2|3|4)$ ]] 
+while ! [[ "$desktop" =~ ^(1|2|3|4|5|6)$ ]] 
 do
-    echo "Please select 1,2,3,4,5,6 for:"
-    echo "1. Gnome"
-    echo "2. KDE/Plasma"
-    echo "3. Xfce"
-    echo "4. LXQt"	
-    echo "5. LXDE"
-    echo "6. None - Quit"
+    echo "Please select 1,2,3,4,5,6,7 for:"
+    echo "1. GNOME Minimal"
+    echo "2. GNOME with apps"
+    echo "3. KDE Plasma"
+    echo "4. Xfce"
+    echo "5. LXQt"	
+    echo "6. LXDE"
+    echo "7. None - Quit"
     read -p "Desktop: " desktop
 done
 case $desktop in
     1)
-        pacstrap /mnt gnome-shell mutter chrome-gnome-shell gdm gnome-backgrounds gnome-control-center gnome-screenshot gnome-system-monitor gnome-terminal gnome-tweak-tool nautilus tracker
+        pacstrap /mnt gdm gnome-shell chrome-gnome-shell gnome-backgrounds gnome-control-center gnome-screenshot gnome-system-monitor gnome-terminal gnome-tweak-tool nautilus tracker
         arch-chroot /mnt /bin/bash -c "systemctl enable gdm.service"
         ;;
     2)
-        pacstrap /mnt sddm plasma dolphin konsole kate kcalc ark gwenview spectacle okular packagekit-qt5
+    	pacstrap /mnt gdm gnome
+    	arch-chroot /mnt /bin/bash -c "systemctl enable gdm.service"
+    	;;
+    3)
+        pacstrap /mnt sddm plasma plasma-wayland-session dolphin konsole kate kcalc ark gwenview spectacle okular packagekit-qt5
         arch-chroot /mnt /bin/bash -c "systemctl enable sddm.service"
         ;;
-    3)
+    4)
         pacstrap /mnt lxdm xfce xfce4-goodies
         arch-chroot /mnt /bin/bash -c "systemctl enable lxdm.service"
         ;;
-    4)
+    5)
     	pacstrap /mnt sddm lxqt breeze-icons featherpad
     	arch-chroot /mnt /bin/bash -c "systemctl enable sddm.service"
     	;;
-    5)
+    6)
     	pacstrap /mnt lxdm lxde leafpad galculator
     	arch-chroot /mnt /bin/bash -c "systemctl enable lxdm.service"
     	;;
-    6)
+    7)
         echo "No desktop environment will be installed."
         exit 0
         ;;
@@ -65,7 +70,7 @@ then
     pacstrap /mnt flatpak
 fi
 clear
-echo ">>> Printer Support <<<"
+echo ">>> Printer Support (CUPS) <<<"
 echo
 echo "Do you want to add printing support? (Y/N)"
 read -p "Printing Support: " printerSupport
@@ -78,7 +83,7 @@ echo ">>> IzZy's Customs <<<"
 echo
 echo "Install my customs? (Y/N)"
 echo "These customs includes:"
-echo "- Flatpak Applications - libreoffice, geary, remmina, boxes & Gnome Applications if Gnome DE is selected"
+echo "- Flatpak Applications - libreoffice, geary, remmina, boxes & GNOME Applications if GNOME Minimal option is selected"
 echo "- AUR Packages - timeshift (for snapshots), vscode, teams"
 read -p "My Customs: " custom
 if [[ $custom == "y" || $custom == "Y" || $custom == "yes" || $custom == "Yes" ]]
