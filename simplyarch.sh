@@ -16,7 +16,6 @@ echo
 read -p "Do you want to continue? (Y/N): " prompt
 if [[ $prompt == "y" || $prompt == "Y" || $prompt == "yes" || $prompt == "Yes" ]]
 then
-	#timedatectl set-ntp true
 	clear
 	# Ask locales
 	echo ">>> Region & Language <<<"
@@ -28,9 +27,6 @@ then
 	then
 		keyboard="us"
 	fi
-	#echo
-	#echo "EXAMPLES: America/New_York | Europe/Berlin"
-	#read -p "Timezone: " timezone
 	echo
 	echo "EXAMPLES: en_US | es_ES (don't add .UTF-8)"
 	read -p "Locale: " locale
