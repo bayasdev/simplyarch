@@ -65,9 +65,9 @@ fi
 clear
 echo ">>> IzZy's Customs <<<"
 echo
-echo "Install my customs? (Y/N)"
+echo "Install my customs? Flatpaks is primarily for Gnome Desktop. (Y/N)"
 echo "These customs includes:"
-echo "- flatpak applications (libre office and other general flatpaks)"
+echo "- flatpak applications (libre office and LOTS of gnome flatpaks)"
 echo "- timeshift (for snapshots)"
 read -p "My Customs: " custom
 if [[ $custom == "y" || $custom == "Y" || $custom == "yes" || $custom == "Yes" ]]
@@ -76,7 +76,6 @@ then
     then
         arch-chroot /mnt /bin/bash -c "flatpak install flathub -y --noninteractive --app org.gnome.Boxes org.gnome.Calculator org.gnome.Calendar org.gnome.Characters org.gnome.clocks org.gnome.Contacts org.gnome.eog org.gnome.Epiphany org.gnome.Extensions org.gnome.Evince org.gnome.FileRoller org.gnome.font-viewer org.gnome.Geary org.gnome.gedit org.gnome.Logs org.gnome.Photos org.gnome.Totem org.gnome.Weather org.libreoffice.LibreOffice org.remmina.Remmina"
     fi
-    #arch-chroot -u $user /mnt /bin/bash -c "HOME=/home/$user; paru -Sy timeshift-bin visual-studio-code-bin teams displaylink --removemake --cleanafter --noconfirm"
     echo "HOME=/home/$user; paru -Sy timeshift-bin visual-studio-code-bin teams displaylink --removemake --cleanafter --noconfirm" | arch-chroot /mnt /bin/bash -c "su $user"
 fi
 exit 0
