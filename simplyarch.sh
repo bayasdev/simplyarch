@@ -90,7 +90,9 @@ then
 	echo
 	while ! [[ "$partType" =~ ^(1|2)$ ]] 
 	do
-		echo "Please select partition type: e.g: 1 for EXT4 and 2 for BTRFS"
+		echo "Please select partition type (1/2):"
+		echo "1. EXT4"
+		echo "2. BTRFS"
 		read -p "Partition Type: " partType
 	done
 	clear
@@ -115,17 +117,7 @@ then
 			;;
 	esac
 	clear
-	echo "Partition Table"
-	echo
-	lsblk
-	echo
-	while ! [[ "$bootType" =~ ^(1|2)$ ]] 
-	do
-		echo "Please select boot type: e.g: 1 for UEFI and 2 for BIOS"
-		read -p "Partition Type: " bootType
-	done
-	clear
-	if [ $bootType == 1 ]
+	if [[ -d /sys/firmware/efi ]]
 	then
 		echo "Partition Table"
 		echo
@@ -172,7 +164,7 @@ then
 	echo "This process may take a while, please wait..."
 	sleep 1
 	# Install base system
-	if [ $bootType == 1 ]
+	if [[ -d /sys/firmware/efi ]]
 	then
 		pacstrap /mnt base base-devel linux linux-firmware linux-headers grub efibootmgr os-prober bash-completion sudo nano vim networkmanager ntfs-3g neofetch htop git reflector xdg-user-dirs e2fsprogs man-db
 	else
@@ -202,7 +194,7 @@ then
 	echo "::1		localhost" >> /mnt/etc/hosts
 	echo "127.0.1.1	$hostname.localdomain	$hostname" >> /mnt/etc/hosts
 	# grub
-	if [ $bootType == 1 ]
+	if [[ -d /sys/firmware/efi ]]
 	then
 		arch-chroot /mnt /bin/bash -c "grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=Arch"
 	else
