@@ -15,7 +15,7 @@ EXPRESS OR IMPLIED
 - A working internet connection
 - **Being a somewhat advanced user**
 - A previously partitioned disk
-- **UEFI only** (BIOS version soon™)
+- **UEFI & BIOS**
 ## Filesystem Support
 - EXT4
 - **(NEW)** Initial BTRFS support (thanks [@lenuswalker](https://github.com/lenuswalker))
@@ -36,7 +36,7 @@ EXPRESS OR IMPLIED
 - Partition the disk with the tool of your choice
 - Install git `pacman -Sy git`
 - Clone this repo `git clone https://github.com/victor-bayas/simplyarch`
-- Run the `simplyarch-uefi.sh` file and follow on-screen instructions
+- Run the `simplyarch.sh` file and follow on-screen instructions
 # And now what? ❓
 - Install drivers not included with the kernel if your hardware needs it (e.g. Nvidia, Broadcom, VAAPI, etc)
 - Install `xorg-core`, a DM and the DE/WM of your choice
