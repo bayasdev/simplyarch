@@ -4,32 +4,42 @@ echo ">>> Desktop Environment <<<"
 echo
 while ! [[ "$desktop" =~ ^(1|2|3|4)$ ]] 
 do
-    echo "Please select 1,2,3,4 for:"
+    echo "Please select 1,2,3,4,5,6 for:"
     echo "1. Gnome"
     echo "2. KDE/Plasma"
     echo "3. Xfce"
-    echo "4. None - Quit"
+    echo "4. LXQt"	
+    echo "5. LXDE"
+    echo "6. None - Quit"
     read -p "Desktop: " desktop
 done
 case $desktop in
     1)
-        pacstrap /mnt gnome-shell mutter chrome-gnome-shell firefox gdm gnome-backgrounds gnome-control-center gnome-screenshot gnome-system-monitor gnome-terminal gnome-tweak-tool nautilus tracker
+        pacstrap /mnt gnome-shell mutter chrome-gnome-shell gdm gnome-backgrounds gnome-control-center gnome-screenshot gnome-system-monitor gnome-terminal gnome-tweak-tool nautilus tracker
         arch-chroot /mnt /bin/bash -c "systemctl enable gdm.service"
         ;;
     2)
-        pacstrap /mnt plasma-desktop plasma-wayland-session ark dolphin firefox gwenview konsole kwrite krunner kscreen partitionmanager plasma-nm powerdevil sddm
+        pacstrap /mnt sddm plasma dolphin konsole kate kcalc ark gwenview spectacle okular packagekit-qt5
         arch-chroot /mnt /bin/bash -c "systemctl enable sddm.service"
         ;;
     3)
-        pacstrap /mnt xfce xfce4-goodies firefox lightdm lightdm-gtk-greeter
-        arch-chroot /mnt /bin/bash -c "systemctl enable lightdm.service"
+        pacstrap /mnt lxdm xfce xfce4-goodies
+        arch-chroot /mnt /bin/bash -c "systemctl enable lxdm.service"
         ;;
     4)
+    	pacstrap /mnt sddm lxqt breeze-icons featherpad
+    	arch-chroot /mnt /bin/bash -c "systemctl enable sddm.service"
+    5)
+    	pacstrap /mnt lxdm lxde leafpad galculator
+    	arch-chroot /mnt /bin/bash -c "systemctl enable lxdm.service"
+    6)
         echo "No desktop environment will be installed."
         exit 0
         ;;
 esac
-# install vm video drivers
+# install Firefox for all DE selections
+pacstrap /mnt firefox
+# install KVM video drivers
 if [[ $dekstop != "2" && arch-chroot /mnt /bin/bash -c "grep -q ^flags.*\ hypervisor\  /proc/cpuinfo" ]]
 then
     pacstrap /mnt spice-vdagent xf86-video-qxl
@@ -41,7 +51,7 @@ echo "Do you want to add NVIDIA support? (Y/N)"
 read -p "NVIDIA Support: " nvidia
 if [[ $nvidia == "y" || $nvidia == "Y" || $nvidia == "yes" || $nvidia == "Yes" ]]
 then
-    pacstrap /mnt nvidia egl-wayland
+    pacstrap /mnt nvidia nvidia-utils egl-wayland
 fi
 clear
 echo ">>> Flatpak <<<"
@@ -67,7 +77,7 @@ echo
 echo "Install my customs? (Y/N)"
 echo "These customs includes:"
 echo "- Flatpak Applications - libreoffice, geary, remmina, boxes & Gnome Applications if Gnome DE is selected"
-echo "- Aur Packages - timeshift (for snapshots), vscode, teams"
+echo "- AUR Packages - timeshift (for snapshots), vscode, teams"
 read -p "My Customs: " custom
 if [[ $custom == "y" || $custom == "Y" || $custom == "yes" || $custom == "Yes" ]]
 then
