@@ -17,9 +17,8 @@ case $desktop in
         arch-chroot /mnt /bin/bash -c "systemctl enable gdm.service"
         ;;
     2)
-        pacstrap /mnt plasma plasma-wayland-session ark dolphin firefox gwenview konsole kwrite krunner sddm
+        pacstrap /mnt plasma plasma-wayland-session ark dolphin firefox gwenview konsole kwrite krunner partitionmanager sddm xorg
         arch-chroot /mnt /bin/bash -c "systemctl enable sddm.service"
-        arch-chroot /mnt /bin/bash -c "systemctl enable bluetooth.service"
         ;;
     3)
         pacstrap /mnt xfce xfce4-goodies firefox lightdm lightdm-gtk-greeter
