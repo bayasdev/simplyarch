@@ -28,9 +28,6 @@ then
 	then
 		keyboard="us"
 	fi
-	#echo
-	#echo "EXAMPLES: America/New_York | Europe/Berlin"
-	#read -p "Timezone: " timezone
 	echo
 	echo "EXAMPLES: en_US | es_ES (don't add .UTF-8)"
 	read -p "Locale: " locale
@@ -172,7 +169,6 @@ then
 	fi
 	# fstab
 	genfstab -U /mnt >> /mnt/etc/fstab
-	nano /mnt/etc/fstab
 	# configure base system
 	# locales
 	echo "$locale.UTF-8 UTF-8" >> /mnt/etc/locale.gen

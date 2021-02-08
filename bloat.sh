@@ -13,7 +13,7 @@ do
 done
 case $desktop in
     1)
-        pacstrap /mnt gnome-shell mutter chrome-gnome-shell firefox gdm gnome-backgrounds gnome-control-center gnome-screenshot gnome-terminal gnome-tweak-tool nautilus 
+        pacstrap /mnt gnome-shell mutter chrome-gnome-shell firefox gdm gnome-backgrounds gnome-control-center gnome-screenshot gnome-system-monitor gnome-terminal gnome-tweak-tool nautilus 
         arch-chroot /mnt /bin/bash -c "systemctl enable gdm.service"
         ;;
     2)
@@ -76,6 +76,7 @@ then
     then
         arch-chroot /mnt /bin/bash -c "flatpak install flathub -y --noninteractive --app org.gnome.Boxes org.gnome.Calculator org.gnome.Calendar org.gnome.Characters org.gnome.clocks org.gnome.eog org.gnome.Epiphany org.gnome.Extensions org.gnome.Evince org.gnome.FileRoller org.gnome.font-viewer org.gnome.Geary org.gnome.gedit org.gnome.Photos org.gnome.Totem org.gnome.Weather org.libreoffice.LibreOffice"
     fi
-    arch-chroot -u $user /mnt /bin/bash -c "HOME=/home/$user; paru -Sy timeshift-bin --removemake --cleanafter --noconfirm"
+    #arch-chroot -u $user /mnt /bin/bash -c "HOME=/home/$user; paru -Sy timeshift-bin visual-studio-code-bin teams displaylink --removemake --cleanafter --noconfirm"
+    echo "HOME=/home/$user; paru -Sy timeshift-bin visual-studio-code-bin teams displaylink --removemake --cleanafter --noconfirm" | arch-chroot /mnt /bin/bash -c "su $user"
 fi
 exit 0
