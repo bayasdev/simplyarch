@@ -4,7 +4,7 @@ echo ">>> Desktop Environment <<<"
 echo
 while ! [[ "$desktop" =~ ^(1|2|3|4)$ ]] 
 do
-    echo "Please select 1,2,3,4for:"
+    echo "Please select 1,2,3,4 for:"
     echo "1. Gnome"
     echo "2. KDE/Plasma"
     echo "3. Xfce"
@@ -13,7 +13,7 @@ do
 done
 case $desktop in
     1)
-        pacstrap /mnt gnome-shell mutter chrome-gnome-shell file-roller firefox gdm gnome-backgrounds gnome-control-center gnome-terminal gnome-tweak-tool nautilus 
+        pacstrap /mnt gnome-shell mutter chrome-gnome-shell firefox gdm gnome-backgrounds gnome-control-center gnome-screenshot gnome-terminal gnome-tweak-tool nautilus 
         arch-chroot /mnt /bin/bash -c "systemctl enable gdm.service"
         ;;
     2)
@@ -70,6 +70,6 @@ if [[ $custom == "y" || $custom == "Y" || $custom == "yes" || $custom == "Yes" ]
 then
     pacstrap /mnt alacritty
     arch-chroot /mnt /bin/bash -c "paru --skipreview --removemake --cleanafter timeshift"
-    arch-chroot /mnt /bin/bash -c "flatpak install flathub -y --noninteractive --app org.gnome.Boxes org.gnome.Calculator org.gnome.Calendar org.gnome.clocks org.gnome.eog org.gnome.Epiphany org.gnome.Extensions org.gnome.Evince org.gnome.font-viewer org.gnome.Geary org.gnome.gedit org.gnome.Photos org.gnome.Totem org.gnome.Weather"
+    arch-chroot /mnt /bin/bash -c "flatpak install flathub -y --noninteractive --app org.gnome.Boxes org.gnome.Calculator org.gnome.Calendar org.gnome.Characters org.gnome.clocks org.gnome.eog org.gnome.Epiphany org.gnome.Extensions org.gnome.Evince org.gnome.FileRoller org.gnome.font-viewer org.gnome.Geary org.gnome.gedit org.gnome.Photos org.gnome.Totem org.gnome.Weather"
 fi
 exit 0
