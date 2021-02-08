@@ -75,9 +75,6 @@ if [[ $custom == "y" || $custom == "Y" || $custom == "yes" || $custom == "Yes" ]
 then
     pacstrap /mnt alacritty
     arch-chroot /mnt /bin/bash -c "flatpak install flathub -y --noninteractive --app org.gnome.Boxes org.gnome.Calculator org.gnome.Calendar org.gnome.Characters org.gnome.clocks org.gnome.eog org.gnome.Epiphany org.gnome.Extensions org.gnome.Evince org.gnome.FileRoller org.gnome.font-viewer org.gnome.Geary org.gnome.gedit org.gnome.Photos org.gnome.Totem org.gnome.Weather org.libreoffice.LibreOffice"
-    arch-chroot /mnt /bin/bash -c "flatpak update"
-    arch-chroot /mnt /bin/bash -c "su $user"
-    arch-chroot /mnt /bin/bash -c "paru -S timeshift --removemake --cleanafter"
-    arch-chroot /mnt /bin/bash -c "exit"
+    arch-chroot -u $user /mnt /bin/bash -c "paru -Sy timeshift --removemake --cleanafter"
 fi
 exit 0
