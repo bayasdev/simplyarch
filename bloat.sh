@@ -17,7 +17,7 @@ case $desktop in
         arch-chroot /mnt /bin/bash -c "systemctl enable gdm.service"
         ;;
     2)
-        pacstrap /mnt plasma ark dolphin firefox gwenview konsole kwrite krunner partitionmanager sddm
+        pacstrap /mnt plasma-desktop ark dolphin firefox gwenview konsole kwrite krunner partitionmanager sddm
         arch-chroot /mnt /bin/bash -c "systemctl enable sddm.service"
         ;;
     3)
