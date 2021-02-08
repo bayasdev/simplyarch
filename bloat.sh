@@ -17,7 +17,7 @@ case $desktop in
         arch-chroot /mnt /bin/bash -c "systemctl enable gdm.service"
         ;;
     2)
-        pacstrap /mnt plasma-desktop ark dolphin firefox gwenview konsole kwrite krunner partitionmanager sddm
+        pacstrap /mnt plasma-desktop plasma-wayland-session ark dolphin firefox gwenview konsole kwrite krunner partitionmanager sddm
         arch-chroot /mnt /bin/bash -c "systemctl enable sddm.service"
         ;;
     3)
@@ -41,7 +41,7 @@ echo "Do you want to add NVIDIA support? (Y/N)"
 read -p "NVIDIA Support: " nvidia
 if [[ $nvidia == "y" || $nvidia == "Y" || $nvidia == "yes" || $nvidia == "Yes" ]]
 then
-    pacstrap /mnt nvidia
+    pacstrap /mnt nvidia egl-wayland
 fi
 clear
 echo ">>> Flatpak <<<"
