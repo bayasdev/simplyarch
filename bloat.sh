@@ -4,11 +4,11 @@ echo ">>> Desktop Environment <<<"
 echo
 while ! [[ "$desktop" =~ ^(1|2|3|4)$ ]] 
 do
-    echo "Please select 1,2,3 for:"
+    echo "Please select 1,2,3,4for:"
     echo "1. Gnome"
     echo "2. KDE/Plasma"
     echo "3. Xfce"
-    echo "4. None"
+    echo "4. None - Quit"
     read -p "Desktop: " desktop
 done
 case $desktop in
@@ -27,6 +27,7 @@ case $desktop in
         ;;
     4)
         echo "No desktop environment will be installed."
+        exit 0
         ;;
 esac
 clear
@@ -71,3 +72,4 @@ then
     arch-chroot /mnt /bin/bash -c "paru --skipreview --removemake --cleanafter timeshift"
     arch-chroot /mnt /bin/bash -c "flatpak install flathub -y --noninteractive --app org.gnome.Boxes org.gnome.Calculator org.gnome.Calendar org.gnome.clocks org.gnome.eog org.gnome.Epiphany org.gnome.Extensions org.gnome.Evince org.gnome.font-viewer org.gnome.Geary org.gnome.gedit org.gnome.Photos org.gnome.Totem org.gnome.Weather"
 fi
+exit 0
