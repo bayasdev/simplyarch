@@ -67,4 +67,4 @@ If you don't like the Arch way of doing stuff with the terminal we have prepared
 - `LICENSE.md`: MIT License
 - `img` folder: as the name says
 ## I want to help SimplyArch development 🙋‍♂️🙋‍♀️
-- Feel free to open an Issue or Pull Request and I'll be happy to receive any feedback or code improvement
+Feel free to open an Issue or Pull Request and I'll be happy to receive any feedback or code improvement
