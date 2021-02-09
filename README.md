@@ -35,7 +35,7 @@ EXPRESS OR IMPLIED
 - Connect to the internet
 - Partition the disk with the tool of your choice
 - Install git `pacman -Sy git`
-- Clone this repo `git clone https://github.com/victor-bayas/simplyarch`
+- Clone this repo `git clone https://github.com/geminis3/simplyarch`
 - Run the `simplyarch.sh` file and follow on-screen instructions
 ## And now what? ❓
 - Choose to `bloat` (optional)
@@ -49,7 +49,7 @@ If you don't like the Arch way of doing stuff with the terminal we have prepared
 ![bloat](img/bloat-banner.png)
 
 ### Has SimplyArch become what it swore to destroy?
-- **No**, hit `7` when installation finishes to skip `bloat` and keep rolling 😇
+- **No**, select None when installation finishes to skip `bloat` and keep rolling 😇
 - The base SimplyArch script **will continue to be a separate component that provides only a minimal system**
 - **ProTip:** Review the choices `bloat.sh` will make for you
 ### Supported desktop environments
