@@ -12,8 +12,8 @@
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 EXPRESS OR IMPLIED
 ## Introducing `bloat` 🐌
-- Yes, we became what we swore to destroy
-<img src="img/bloat-banner.png" alt="bloat-banner" height="400">
+![banner-bloat](img/banner-bloat.png)
+Yes, we became what we swore to destroy
 - **Just kidding!** hit `7` when installation finishes to skip `bloat` and keep rolling 😇
 - ProTip: Review the choices `bloat.sh` make for you
 ### Supported desktop environments
