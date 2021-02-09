@@ -72,11 +72,12 @@ case $desktop in
         arch-chroot /mnt /bin/bash -c "systemctl enable lxdm.service"
     	;;
 esac
-# install KVM video drivers
+# install KVM drivers (video qxl is disabled due to bugs on certain DEs)
 vm=$(arch-chroot /mnt /bin/bash -c "systemd-detect-virt")
 if [[ $vm = "kvm" ]]
 then
-    arch-chroot /mnt /bin/bash -c "pacman -S spice-vdagent xf86-video-qxl --noconfirm --needed"
+    arch-chroot /mnt /bin/bash -c "pacman -S spice-vdagent --noconfirm --needed"
+    #arch-chroot /mnt /bin/bash -c "pacman -S spice-vdagent xf86-video-qxl --noconfirm --needed"
 fi
 clear
 echo ">>> NVIDIA Support <<<"
