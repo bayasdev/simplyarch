@@ -21,25 +21,25 @@ do
 done
 case $desktop in
     1)
-        DEpkg = "gdm gnome-shell chrome-gnome-shell gnome-backgrounds gnome-control-center gnome-screenshot gnome-system-monitor gnome-terminal gnome-tweak-tool nautilus tracker"
+        DEpkg="gdm gnome-shell chrome-gnome-shell gnome-backgrounds gnome-control-center gnome-screenshot gnome-system-monitor gnome-terminal gnome-tweak-tool nautilus tracker"
         ;;
     2)
-    	DEpkg = "gdm gnome"
+    	DEpkg="gdm gnome"
     	;;
     3)
-        DEpkg = "sddm plasma plasma-wayland-session dolphin konsole kate kcalc ark gwenview spectacle okular packagekit-qt5"
+        DEpkg="sddm plasma plasma-wayland-session dolphin konsole kate kcalc ark gwenview spectacle okular packagekit-qt5"
         ;;
     4)
-        DEpkg = "lxdm xfce xfce4-goodies"
+        DEpkg="lxdm xfce xfce4-goodies"
         ;;
     5)
-    	DEpkg = "sddm lxqt breeze-icons featherpad"
+    	DEpkg="sddm lxqt breeze-icons featherpad"
     	;;
     6)
-    	DEpkg = "lxdm lxde leafpad galculator"
+    	DEpkg="lxdm lxde leafpad galculator"
     	;;
     7)
-        DEpkg = "lxdm cinnamon cinnamon-translations"
+        DEpkg="lxdm cinnamon cinnamon-translations"
     	;;
     8)
         echo "No desktop environment will be installed."
@@ -73,7 +73,7 @@ case $desktop in
     	;;
 esac
 # install KVM video drivers
-vm = $(arch-chroot /mnt /bin/bash -c "systemd-detect-virt")
+vm=$(arch-chroot /mnt /bin/bash -c "systemd-detect-virt")
 if [[ $vm = "kvm" ]]
 then
     arch-chroot /mnt /bin/bash -c "pacman -S spice-vdagent xf86-video-qxl --noconfirm --needed"
