@@ -1,8 +1,12 @@
 #!/bin/bash
 clear
+echo ">>> Bloat installer <<<"
+echo
+echo "This step is COMPLETELY OPTIONAL, feel free to select None and finish the installation process"
+echo
 echo ">>> Desktop Environment <<<"
 echo
-while ! [[ "$desktop" =~ ^(1|2|3|4|5|6)$ ]] 
+while ! [[ "$desktop" =~ ^(1|2|3|4|5|6|7)$ ]] 
 do
     echo "Please select 1,2,3,4,5,6,7 for:"
     echo "1. GNOME Minimal"
@@ -11,7 +15,8 @@ do
     echo "4. Xfce"
     echo "5. LXQt"	
     echo "6. LXDE"
-    echo "7. None - Quit"
+    echo "7. Cinnamon"
+    echo "8. None - Quit"
     read -p "Desktop: " desktop
 done
 case $desktop in
@@ -40,6 +45,10 @@ case $desktop in
     	arch-chroot /mnt /bin/bash -c "systemctl enable lxdm.service"
     	;;
     7)
+        pacstrap /mnt lxdm cinnamon cinnamon-translations
+        arch-chroot /mnt /bin/bash -c "systemctl enable lxdm.service"
+    	;;
+    8)
         echo "No desktop environment will be installed."
         exit 0
         ;;
