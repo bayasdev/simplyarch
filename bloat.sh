@@ -6,7 +6,7 @@ echo "This step is COMPLETELY OPTIONAL, feel free to select None and finish the 
 echo
 echo ">>> Desktop Environment <<<"
 echo
-while ! [[ "$desktop" =~ ^(1|2|3|4|5|6|7)$ ]] 
+while ! [[ "$desktop" =~ ^(1|2|3|4|5|6|7|8)$ ]] 
 do
     echo "Please select one option:"
     echo "1. GNOME Minimal"
