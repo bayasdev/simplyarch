@@ -10,7 +10,7 @@ while ! [[ "$desktop" =~ ^(1|2|3|4|5|6|7)$ ]]
 do
     echo "Please select 1,2,3,4,5,6,7 for:"
     echo "1. GNOME Minimal"
-    echo "2. GNOME with apps"
+    echo "2. GNOME Full (beware of pkgs count)"
     echo "3. KDE Plasma"
     echo "4. Xfce"
     echo "5. LXQt"	
@@ -21,10 +21,10 @@ do
 done
 case $desktop in
     1)
-        DEpkg="gdm gnome-shell chrome-gnome-shell gnome-backgrounds gnome-control-center gnome-screenshot gnome-system-monitor gnome-terminal gnome-tweak-tool nautilus tracker"
+        DEpkg="gdm gnome-shell gnome-backgrounds gnome-control-center gnome-screenshot gnome-system-monitor gnome-terminal gnome-tweak-tool nautilus gedit gnome-calculator gnome-disks"
         ;;
     2)
-    	DEpkg="gdm gnome"
+    	DEpkg="gdm gnome gnome-tweak-tool"
     	;;
     3)
         DEpkg="sddm plasma plasma-wayland-session dolphin konsole kate kcalc ark gwenview spectacle okular packagekit-qt5"
@@ -39,7 +39,7 @@ case $desktop in
     	DEpkg="lxdm lxde leafpad galculator"
     	;;
     7)
-        DEpkg="lxdm cinnamon cinnamon-translations"
+        DEpkg="lxdm cinnamon cinnamon-translations gnome-terminal"
     	;;
     8)
         echo "No desktop environment will be installed."
