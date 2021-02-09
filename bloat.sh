@@ -56,7 +56,8 @@ esac
 # install Firefox for all DE selections
 pacstrap /mnt firefox
 # install KVM video drivers
-if arch-chroot /mnt /bin/bash -c "grep -q ^flags.*\ hypervisor\  /proc/cpuinfo"
+vm = $(arch-chroot /mnt /bin/bash -c "systemd-detect-virt")
+if [[ $vm = "kvm" ]]
 then
     pacstrap /mnt spice-vdagent xf86-video-qxl
 fi
