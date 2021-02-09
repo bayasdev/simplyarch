@@ -216,6 +216,10 @@ then
 	echo "Installing the Paru AUR Helper..."
 	echo "cd && git clone https://aur.archlinux.org/paru-bin.git && cd paru-bin && makepkg -si --noconfirm && cd && rm -rf paru-bin" | arch-chroot /mnt /bin/bash -c "su $user"
 	clear
+	# bloat
+	chmod +x bloat.sh
+	./bloat.sh
+	# end
 	echo "SimplyArch Installer"
 	echo
 	echo ">>> Installation finished sucessfully <<<"
