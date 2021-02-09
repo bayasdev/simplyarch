@@ -1,13 +1,3 @@
-<p align="center">
-  <a href="https://github.com/victor-bayas/simplyarch">
-    <img src="img/laptop.png" alt="laptop-mockup" height="200">
-  </a>
-  <h1 align="center">SimplyArch Installer</h1>
-  <p align="center">
-    The simplest way to install Arch Linux where you choose to bloat or not to bloat
-  </p>
-</p>
-
 ## Disclaimer
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 EXPRESS OR IMPLIED
@@ -45,9 +35,6 @@ EXPRESS OR IMPLIED
 - Profit
 ## Introducing `bloat` 🐌
 If you don't like the Arch way of doing stuff with the terminal we have prepared you a **completely optional** and simple post-installation script to help you finish setting up your Arch Linux system by installing a desktop environment, propietary Nvidia drivers (optional), Flatpak support and more.
-
-![bloat](img/bloat-banner.png)
-
 ### Has SimplyArch become what it swore to destroy?
 - **No**, select None when installation finishes to skip `bloat` and keep rolling 😇
 - The base SimplyArch script **will continue to be a separate component that provides only a minimal system**
