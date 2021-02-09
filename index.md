@@ -1,3 +1,4 @@
+Install Arch Linux the fast and easy way, the **simply** install script where you're always on control.
 ### How to use it 📖
 - Boot latest Arch Linux ISO
 - Load your keyboard e.g `loadkeys us-acentos`
