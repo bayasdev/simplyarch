@@ -11,18 +11,6 @@
 ## Disclaimer
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 EXPRESS OR IMPLIED
-## Introducing `bloat` 🐌
-![bloat](img/bloat-banner.png)
-### Yes, we became what we swore to destroy
-- **Just kidding!** hit `7` when installation finishes to skip `bloat` and keep rolling 😇
-- ProTip: Review the choices `bloat.sh` make for you
-### Supported desktop environments
-- GNOME (minimal install included)
-- KDE Plasma
-- Xfce
-- LXQt
-- LXDE
-- Cinnamon
 ## Pre-requisites 🔎
 - A working internet connection
 - **Being a somewhat advanced user**
@@ -53,4 +41,20 @@ EXPRESS OR IMPLIED
 - Install drivers not included with the kernel if your hardware needs it (e.g. Nvidia, Broadcom, VAAPI, etc)
 - Install `xorg-core`, a DM and the DE/WM of your choice
 - Install any other application you need
-- Profit 
+- Profit
+## Introducing `bloat` 🐌
+If you don't like the Arch way of doing stuff with the terminal we have prepared you a **completely optional** and simple post-installation script to help you finish setting up your Arch Linux system by installing a desktop environment, propietary Nvidia drivers (optional), Flatpak support and more.
+![bloat](img/bloat-banner.png)
+### Has SimplyArch become what it swore to destroy?
+- **No**, hit `7` when installation finishes to skip `bloat` and keep rolling 😇
+- The base SimplyArch script **will continue to be a separate component that provides only a minimal system**
+- **ProTip:** Review the choices `bloat.sh` will make for you
+### Supported desktop environments
+- GNOME (minimal install included)
+- KDE Plasma
+- Xfce
+- LXQt
+- LXDE
+- Cinnamon
+## I want to help SimplyArch development 🙋‍♂️🙋‍♀️
+- Open an Issue or Pull Request and I'll be happy to receive any feedback or code improvement
