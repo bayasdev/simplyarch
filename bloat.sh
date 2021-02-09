@@ -1,5 +1,9 @@
 #!/bin/bash
 clear
+echo ">>> Bloat installer <<<"
+echo
+echo "This step is COMPLETELY OPTIONAL, feel free to select None and finish the installation process"
+echo
 echo ">>> Desktop Environment <<<"
 echo
 while ! [[ "$desktop" =~ ^(1|2|3|4|5|6|7)$ ]] 
@@ -11,7 +15,8 @@ do
     echo "4. Xfce"
     echo "5. LXQt"	
     echo "6. LXDE"
-    echo "7. None - Quit"
+    echo "7. Cinnamon"
+    echo "8. None - Quit"
     read -p "Desktop: " desktop
 done
 case $desktop in
@@ -24,7 +29,7 @@ case $desktop in
     	arch-chroot /mnt /bin/bash -c "systemctl enable gdm.service"
     	;;
     3)
-        pacstrap /mnt sddm sddm-kcm plasma-desktop plasma-wayland-session discover dolphin kdedesignerplugin kde-gtk-config konsole kate kcalc ark gwenview spectacle okular packagekit-qt5
+        pacstrap /mnt sddm plasma plasma-wayland-session dolphin konsole kate kcalc ark gwenview spectacle okular packagekit-qt5
         arch-chroot /mnt /bin/bash -c "systemctl enable sddm.service"
         ;;
     4)
@@ -40,6 +45,10 @@ case $desktop in
     	arch-chroot /mnt /bin/bash -c "systemctl enable lxdm.service"
     	;;
     7)
+        pacstrap /mnt lxdm cinnamon cinnamon-translations
+        arch-chroot /mnt /bin/bash -c "systemctl enable lxdm.service"
+    	;;
+    8)
         echo "No desktop environment will be installed."
         exit 0
         ;;
@@ -49,10 +58,7 @@ pacstrap /mnt firefox
 # install KVM video drivers
 if arch-chroot /mnt /bin/bash -c "grep -q ^flags.*\ hypervisor\  /proc/cpuinfo"
 then
-    if ! [[ $desktop == "2" ]]
-    then
-        pacstrap /mnt spice-vdagent xf86-video-qxl
-    fi
+    pacstrap /mnt spice-vdagent xf86-video-qxl
 fi
 clear
 echo ">>> NVIDIA Support <<<"
