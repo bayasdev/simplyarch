@@ -1,12 +1,20 @@
 #!/bin/bash
+
+# WARNING: BLOAT SHALL BE RUN AS A CHILD OF THE BASE SCRIPT BECAUSE PARU CAN'T BE RUN AS ROOT
+# However feel free to override the inherited user variable if you know what you're doing
+#user="your_username"
+
 clear
-echo ">>> SimplyArch bloat installer <<<"
+echo "Bloat by SimplyArch (BETA)"
+echo "Copyright (C) 2021 Victor Bayas"
 echo
-echo "This step is COMPLETELY OPTIONAL, feel free to select None and finish the installation process"
+echo "NOTE: THIS STEP IS COMPLETELY OPTIONAL, feel free to select None and finish the installation process"
+echo
+echo "We'll guide you through the process of installing a DE, additional software and drivers."
 echo
 echo ">>> Desktop Environment <<<"
 echo
-while ! [[ "$desktop" =~ ^(1|2|3|4|5|6|7|8)$ ]] 
+while ! [[ "$desktop" =~ ^(1|2|3|4|5|6|7|8)$ ]]
 do
     echo "Please select one option:"
     echo "1. GNOME Minimal"
@@ -21,11 +29,11 @@ do
 done
 case $desktop in
     1)
-        DEpkg="gdm gnome-shell gnome-backgrounds gnome-control-center gnome-screenshot gnome-system-monitor gnome-terminal gnome-tweak-tool nautilus gedit gnome-calculator gnome-disks"
+        DEpkg="gdm gnome-shell gnome-backgrounds gnome-control-center gnome-screenshot gnome-system-monitor gnome-terminal gnome-tweak-tool nautilus gedit gnome-calculator gnome-disks evince"
         ;;
     2)
-    	DEpkg="gdm gnome gnome-tweak-tool"
-    	;;
+        DEpkg="gdm gnome gnome-tweak-tool"
+        ;;
     3)
         DEpkg="sddm plasma plasma-wayland-session dolphin konsole kate kcalc ark gwenview spectacle okular packagekit-qt5"
         ;;
@@ -33,14 +41,14 @@ case $desktop in
         DEpkg="lxdm xfce4 xfce4-goodies"
         ;;
     5)
-    	DEpkg="sddm lxqt breeze-icons featherpad"
-    	;;
+        DEpkg="sddm lxqt breeze-icons featherpad"
+        ;;
     6)
-    	DEpkg="lxdm lxde leafpad galculator"
-    	;;
+        DEpkg="lxdm lxde leafpad galculator"
+        ;;
     7)
         DEpkg="lxdm cinnamon cinnamon-translations gnome-terminal"
-    	;;
+        ;;
     8)
         echo "No desktop environment will be installed."
         exit 0
@@ -54,8 +62,8 @@ case $desktop in
         arch-chroot /mnt /bin/bash -c "systemctl enable gdm.service"
         ;;
     2)
-    	arch-chroot /mnt /bin/bash -c "systemctl enable gdm.service"
-    	;;
+        arch-chroot /mnt /bin/bash -c "systemctl enable gdm.service"
+        ;;
     3)
         arch-chroot /mnt /bin/bash -c "systemctl enable sddm.service"
         ;;
@@ -63,14 +71,14 @@ case $desktop in
         arch-chroot /mnt /bin/bash -c "systemctl enable lxdm.service"
         ;;
     5)
-    	arch-chroot /mnt /bin/bash -c "systemctl enable sddm.service"
-    	;;
+        arch-chroot /mnt /bin/bash -c "systemctl enable sddm.service"
+        ;;
     6)
-    	arch-chroot /mnt /bin/bash -c "systemctl enable lxdm.service"
-    	;;
+        arch-chroot /mnt /bin/bash -c "systemctl enable lxdm.service"
+        ;;
     7)
         arch-chroot /mnt /bin/bash -c "systemctl enable lxdm.service"
-    	;;
+        ;;
 esac
 # install KVM drivers (xf86-video-qxl is disabled due to bugs on certain DEs)
 vm=$(arch-chroot /mnt /bin/bash -c "systemd-detect-virt")
@@ -78,6 +86,92 @@ if [[ $vm = "kvm" ]]
 then
     arch-chroot /mnt /bin/bash -c "pacman -S spice-vdagent --noconfirm --needed"
 fi
+# app installer
+while ! [[ "$app" =~ ^(15)$ ]] 
+do
+    clear
+    echo ">>> App Installer <<<"
+    echo
+    echo "NOTE: Firefox was already installed on the previous step"
+    echo
+    echo "Please select:"
+    echo
+    echo ">>> Browsers"
+    echo
+    echo "1. Google Chrome"
+    echo "2. Chromium"
+    echo
+    echo ">>> Work & Productivity"
+    echo
+    echo "3. LibreOffice Fresh"
+    echo "4. Zoom"
+    echo "5. Microsoft Teams"
+    echo "6. Telegram Desktop"
+    echo
+    echo ">>> Multimedia"	
+    echo
+    echo "7. VLC"
+    echo "8. MPV"
+    echo
+    echo ">>> System Utilities"
+    echo
+    echo "9. GParted"
+    echo "10. Timeshift Backup"
+    echo
+    echo ">>> Text Editors"
+    echo
+    echo "11. Visual Studio Code"
+    echo "12. Neovim"
+    echo "13. GNU Emacs"
+    echo "14. Atom"
+    echo
+    echo "15. None / Continue to next step"
+    read -p "App (1-15): " app
+    case $app in
+        1)
+            arch-chroot /mnt /bin/bash -c "sudo -u $user paru -S google-chrome --noconfirm --needed"
+            ;;
+        2)
+            arch-chroot /mnt /bin/bash -c "pacman -S chromium --noconfirm --needed"
+            ;;
+        3)
+            arch-chroot /mnt /bin/bash -c "pacman -S libreoffice-fresh --noconfirm --needed"
+            ;;
+        4)
+            arch-chroot /mnt /bin/bash -c "sudo -u $user paru -S zoom --noconfirm --needed"
+            ;;
+        5)
+            arch-chroot /mnt /bin/bash -c "sudo -u $user paru -S teams --noconfirm --needed"
+            ;;
+        6)
+            arch-chroot /mnt /bin/bash -c "pacman -S telegram-desktop --noconfirm --needed"
+            ;;
+        7)
+            arch-chroot /mnt /bin/bash -c "pacman -S vlc --noconfirm --needed"
+            ;;
+        8)
+            arch-chroot /mnt /bin/bash -c "pacman -S mpv --noconfirm --needed"
+            ;;
+        9)
+            arch-chroot /mnt /bin/bash -c "pacman -S gparted --noconfirm --needed"
+            ;;
+        10)
+            arch-chroot /mnt /bin/bash -c "sudo -u $user paru -S timeshift-bin --noconfirm --needed"
+            ;;
+        11)
+            arch-chroot /mnt /bin/bash -c "sudo -u $user paru -S visual-studio-code-bin --noconfirm --needed"
+            ;;
+        12)
+            arch-chroot /mnt /bin/bash -c "pacman -S neovim --noconfirm --needed"
+            ;;
+        13)
+            arch-chroot /mnt /bin/bash -c "pacman -S emacs --noconfirm --needed"
+            ;;
+        14)
+            arch-chroot /mnt /bin/bash -c "pacman -S atom --noconfirm --needed"
+            ;;
+    esac
+done
 clear
 # nvidia
 echo ">>> NVIDIA Support <<<"

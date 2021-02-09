@@ -1,4 +1,7 @@
 #!/bin/bash
+
+# WARNING: THIS SCRIPT USES RELATIVE FILE PATHS SO IT MUST BE RUN FROM THE SAME WORKING DIRECTORY AS THE CLONED REPO
+
 clear
 echo
 echo "Welcome to SimplyArch Installer"
@@ -6,12 +9,9 @@ echo "Copyright (C) 2021 Victor Bayas"
 echo
 echo "DISCLAIMER: THE SOFTWARE IS PROVIDED ""AS IS"", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED"
 echo
-echo "WARNING: Make sure to TYPE CORRECTLY because this script won't perform any user input validation"
+echo "WARNING: MAKE SURE TO TYPE CORRECTLY BECAUSE THE SCRIPT WON'T PERFORM INPUT VALIDATIONS"
 echo
 echo "We'll guide you through the installation process of a functional base Arch Linux system"
-echo
-echo "\"btw btw btw btw btw btw\""
-echo "- a satisfied SimplyArch user"
 echo
 read -p "Do you want to continue? (Y/N): " prompt
 if [[ $prompt == "y" || $prompt == "Y" || $prompt == "yes" || $prompt == "Yes" ]]
@@ -46,7 +46,7 @@ then
 	echo
 	read -sp "Re-type password: " rootpw2
 	echo
-	while [[ $rootpw != $rootpw2 ]]
+	while [[ $rootpw != "$rootpw2" ]]
 	do
 		echo
 		echo "Passwords don't match. Try again"
@@ -59,11 +59,12 @@ then
 	echo
 	echo "Standard User"
 	read -p "User: " user
+	export user
 	read -sp "Password: " userpw
 	echo
 	read -sp "Re-type password: " userpw2
 	echo
-	while [[ $userpw != $userpw2 ]]
+	while [[ $userpw != "$userpw2" ]]
 	do
 		echo
 		echo "Passwords don't match. Try again"
@@ -158,7 +159,7 @@ then
 	echo ">>> Installing and configuring the base system <<<"
 	echo
 	echo "This process may take a while, please wait..."
-	sleep 1
+	sleep 3
 	# Install base system
 	if [[ -d /sys/firmware/efi ]]
 	then
@@ -170,14 +171,14 @@ then
 	genfstab -U /mnt >> /mnt/etc/fstab
 	# configure base system
 	# locales
-	echo "$locale.UTF-8 UTF-8" >> /mnt/etc/locale.gen
+	echo "$locale.UTF-8 UTF-8" > /mnt/etc/locale.gen
 	arch-chroot /mnt /bin/bash -c "locale-gen" 
 	echo "LANG=$locale.UTF-8" > /mnt/etc/locale.conf
+	# keyboard
+	echo "KEYMAP=$keyboard" > /mnt/etc/vconsole.conf
 	# timezone
 	arch-chroot /mnt /bin/bash -c "ln -sf /usr/share/zoneinfo/$(curl https://ipapi.co/timezone) /etc/localtime"
 	arch-chroot /mnt /bin/bash -c "hwclock --systohc"
-	# keyboard
-	echo "KEYMAP="$keyboard"" > /mnt/etc/vconsole.conf
 	# enable multilib
 	sed -i '93d' /mnt/etc/pacman.conf
 	sed -i '94d' /mnt/etc/pacman.conf
@@ -211,7 +212,7 @@ then
 	arch-chroot /mnt /bin/bash -c "/home/$user/simple_reflector.sh"
 	clear
 	# paru
-	echo ">>> Post-install routine <<<"
+	echo ">>> AUR Helper <<<"
 	echo
 	echo "Installing the Paru AUR Helper..."
 	echo "cd && git clone https://aur.archlinux.org/paru-bin.git && cd paru-bin && makepkg -si --noconfirm && cd && rm -rf paru-bin" | arch-chroot /mnt /bin/bash -c "su $user"
@@ -224,9 +225,13 @@ then
 	echo
 	echo ">>> Installation finished sucessfully <<<"
 	echo
-	echo "System will reboot in a moment..."
-	sleep 3
-	clear
-	umount -a
-	reboot
+	read -p "Do you want to reboot? (Y/N): " reboot
+	if [[ $reboot == "y" || $reboot == "Y" || $reboot == "yes" || $reboot == "Yes" ]]
+	then
+		echo "System will reboot in a moment..."
+		sleep 3
+		clear
+		umount -a
+		reboot 
+	fi
 fi
