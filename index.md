@@ -1,37 +1,70 @@
-## Welcome to GitHub Pages
+<p align="center">
+  <a href="https://github.com/victor-bayas/simplyarch">
+    <img src="img/laptop.png" alt="laptop-mockup" height="200">
+  </a>
+  <h1 align="center">SimplyArch Installer</h1>
+  <p align="center">
+    The simplest way to install Arch Linux where you choose to bloat or not to bloat
+  </p>
+</p>
 
-You can use the [editor on GitHub](https://github.com/geminis3/simplyarch/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+## Disclaimer
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED
+## Pre-requisites 🔎
+- A working internet connection
+- **Being a somewhat advanced user**
+- A previously partitioned disk
+- **UEFI & BIOS autodetection**
+### Filesystem Support
+- EXT4
+- **(NEW)** Initial BTRFS support (thanks [@lenuswalker](https://github.com/lenuswalker))
+## What the base script will do ✅
+- Install a functional base system
+- Setup your keyboard, locales, timezone and hostname
+- Create a standard user with sudo permissions
+- Install popular utilities such as `vim` `nano` `htop` `neofetch` and our `simple_reflector.sh` tool
+- **(NEW)** Installs `paru` as the AUR helper instead of `yay`
+## What the base script won't do 🚫
+- Install any driver not included within the kernel
+- Install a DE/WM or any GUI application
+- Make questionable choices for you
+## How to use it 📖
+- Boot latest Arch Linux ISO
+- Load your keyboard e.g `loadkeys us-acentos`
+- Connect to the internet
+- Partition the disk with the tool of your choice
+- Install git `pacman -Sy git`
+- Clone this repo `git clone https://github.com/geminis3/simplyarch`
+- Run the `simplyarch.sh` file and follow on-screen instructions
+## And now what? ❓
+- Choose to `bloat` (optional)
+- Install drivers not included with the kernel if your hardware needs it (e.g. Nvidia, Broadcom, VAAPI, etc)
+- Install `xorg-core`, a DM and the DE/WM of your choice
+- Install any other application you need
+- Profit
+## Introducing `bloat` 🐌
+If you don't like the Arch way of doing stuff with the terminal we have prepared you a **completely optional** and simple post-installation script to help you finish setting up your Arch Linux system by installing a desktop environment, propietary Nvidia drivers (optional), Flatpak support and more.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+![bloat](img/bloat-banner.png)
 
-### Markdown
-
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/geminis3/simplyarch/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+### Has SimplyArch become what it swore to destroy?
+- **No**, select None when installation finishes to skip `bloat` and keep rolling 😇
+- The base SimplyArch script **will continue to be a separate component that provides only a minimal system**
+- **ProTip:** Review the choices `bloat.sh` will make for you
+### Supported desktop environments
+- GNOME (minimal install included)
+- KDE Plasma
+- Xfce
+- LXQt
+- LXDE
+- Cinnamon
+## Project file structure
+- `simplyarch.sh`: our base and main script
+- `simple-reflector.sh`: a simple script that uses the `reflector` tool to fetch an updated list of fastest 20 mirrors, this script gets copied to the home folder on every install for convenience purposes
+- `bloat.sh`: the optional post-installation script
+- `README.md`: this file
+- `LICENSE.md`: MIT License
+- `img` folder: as the name says
+## I want to help SimplyArch development 🙋‍♂️🙋‍♀️
+- Feel free to open an Issue or Pull Request and I'll be happy to receive any feedback or code improvement
