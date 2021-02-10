@@ -11,7 +11,7 @@ echo "DISCLAIMER: THE SOFTWARE IS PROVIDED ""AS IS"", WITHOUT WARRANTY OF ANY KI
 echo
 echo "WARNING: MAKE SURE TO TYPE CORRECTLY BECAUSE THE SCRIPT WON'T PERFORM INPUT VALIDATIONS"
 echo
-echo "We'll guide you through the installation process of a functional base Arch Linux system"
+echo "We'll guide you through the installation process of a fully functional Arch Linux system"
 echo
 read -p "Do you want to continue? (Y/N): " prompt
 if [[ $prompt == "y" || $prompt == "Y" || $prompt == "yes" || $prompt == "Yes" ]]

@@ -1,14 +1,14 @@
 <p align="center">
-  <a href="https://github.com/geminis3/simplyarch">
-    <img src="img/laptop.png" alt="laptop-mockup" height="200">
-  </a>
-  <h1 align="center">SimplyArch Installer</h1>
-  <p align="center">
-    The simplest way to install Arch Linux where you choose to bloat or not to bloat
-  </p>
+<a href="https://github.com/geminis3/simplyarch">
+	<img src="img/laptop.png" alt="laptop-mockup" height="200">
+</a>
+<h1 align="center">SimplyArch Installer</h1>
+<p align="center">
+	The simplest way to install Arch Linux where you choose to bloat or not to bloat
+</p>
 </p>
 
-## Disclaimer
+### Disclaimer
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 EXPRESS OR IMPLIED
 ## Pre-requisites 🔎
@@ -19,17 +19,7 @@ EXPRESS OR IMPLIED
 ### Filesystem Support
 - EXT4
 - **(NEW)** Initial BTRFS support (special thanks to [@lenuswalker](https://github.com/lenuswalker))
-## What the base script will do ✅
-- Install a functional base system
-- Setup your keyboard, locales, timezone and hostname
-- Create a standard user with sudo permissions
-- Install popular utilities such as `vim` `nano` `htop` `neofetch` and our `simple_reflector.sh` tool
-- **(NEW)** Installs `paru` as the AUR helper instead of `yay`
-## What the base script won't do 🚫
-- Install any driver not included within the kernel
-- Install a DE/WM or any GUI application
-- Make questionable choices for you
-## How to use it 📖
+## ⚡ How to use it 🚀
 	
 	# Boot latest Arch Linux ISO
 	
@@ -46,16 +36,19 @@ EXPRESS OR IMPLIED
 	# Partition your disk with the tool of your choice
 	cfdisk
 	
-	# Install Git
-	pacman -Sy git
-	
-	# Clone this repo
-	git clone https://github.com/geminis3/simplyarch
-	
 	# Run the script and follow on-screen instructions
-	./simplyarch.sh
-***
+	curl -L is.gd/simplyarch > run ; sh run
 
+## What the base script will do ✅
+- Install a functional base system
+- Setup your keyboard, locales, timezone and hostname
+- Create a standard user with sudo permissions
+- Install popular utilities such as `vim` `nano` `htop` `neofetch` and our `simple_reflector.sh` tool
+- **(NEW)** Installs `paru` as the AUR helper instead of `yay`
+## What the base script won't do 🚫
+- Install any driver not included within the kernel
+- Install a DE/WM or any GUI application
+- Make questionable choices for you
 ## And now what? ❓
 - Choose to `bloat` (optional)
 - Install drivers not included with the kernel if your hardware needs it (e.g. Nvidia, Broadcom, VAAPI, etc)
@@ -82,6 +75,7 @@ If you don't like the Arch way of doing stuff with the terminal we have prepared
 - `simplyarch.sh`: our base and main script
 - `simple-reflector.sh`: a simple script that uses the `reflector` tool to fetch an updated list of fastest 20 mirrors, this script gets copied to the home folder on every install for convenience purposes
 - `bloat.sh`: the optional post-installation script
+- `run.sh`: bootsrapper script
 - `README.md`: this file
 - `LICENSE.md`: MIT License
 - `img` folder: as the name says
