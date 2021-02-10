@@ -209,6 +209,7 @@ then
 	# update mirrors
 	cp ./simple_reflector.sh /mnt/home/$user/simple_reflector.sh
 	arch-chroot /mnt /bin/bash -c "chmod +x /home/$user/simple_reflector.sh"
+	clear
 	arch-chroot /mnt /bin/bash -c "/home/$user/simple_reflector.sh"
 	clear
 	# paru
@@ -221,6 +222,7 @@ then
 	chmod +x bloat.sh
 	./bloat.sh
 	# end
+	clear
 	echo "SimplyArch Installer"
 	echo
 	echo ">>> Installation finished sucessfully <<<"
