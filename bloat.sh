@@ -80,12 +80,17 @@ case $desktop in
         arch-chroot /mnt /bin/bash -c "systemctl enable lxdm.service"
         ;;
 esac
-# install KVM drivers (xf86-video-qxl is disabled due to bugs on certain DEs)
-vm=$(arch-chroot /mnt /bin/bash -c "systemd-detect-virt")
-if [[ $vm = "kvm" ]]
-then
-    arch-chroot /mnt /bin/bash -c "pacman -S spice-vdagent --noconfirm --needed"
-fi
+# auto-install VM drivers
+case $(systemd-detect-virt) in
+    kvm)
+        # xf86-video-qxl is disabled due to bugs on certain DEs
+        arch-chroot /mnt /bin/bash -c "pacman -S spice-vdagent --noconfirm --needed"
+        ;;
+    vmware)
+        arch-chroot /mnt /bin/bash -c "pacman -S open-vm-tools --noconfirm --needed"
+        arch-chroot /mnt /bin/bash -c "systemctl enable vmtoolsd.service ; systemctl enable vmware-vmblock-fuse.service"
+        ;;
+esac
 # app installer
 while ! [[ "$app" =~ ^(15)$ ]] 
 do
