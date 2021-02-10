@@ -54,8 +54,8 @@ case $desktop in
         exit 0
         ;;
 esac
-# install packages accordingly and Firefox
-arch-chroot /mnt /bin/bash -c "pacman -Sy $DEpkg firefox --noconfirm --needed"
+# install packages accordingly
+arch-chroot /mnt /bin/bash -c "pacman -Sy $DEpkg firefox pulseaudio pavucontrol pulseaudio-alsa --noconfirm --needed"
 # enable DM accordingly
 case $desktop in
     1)
