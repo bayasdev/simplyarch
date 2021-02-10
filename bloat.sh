@@ -38,7 +38,7 @@ case $desktop in
         DEpkg="sddm plasma plasma-wayland-session dolphin konsole kate kcalc ark gwenview spectacle okular packagekit-qt5"
         ;;
     4)
-        DEpkg="lxdm xfce4 xfce4-goodies"
+        DEpkg="lxdm xfce4 xfce4-goodies network-manager-applet"
         ;;
     5)
         DEpkg="sddm lxqt breeze-icons featherpad"
