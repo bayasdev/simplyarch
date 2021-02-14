@@ -6,7 +6,7 @@
 clear
 echo "SimplyArch bootstrapper..."
 echo
-pacman -S glibc git --noconfirm --needed
+pacman -Sy git --noconfirm
 git clone https://github.com/geminis3/simplyarch
 cd simplyarch
 chmod +x simplyarch.sh
