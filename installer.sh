@@ -110,6 +110,7 @@ user_accounts(){
 
 # Disk setup
 disks(){
+    echo
     echo "3. Disks Setup"
 	echo
 	echo "Make sure to have your disk previously partitioned, if you are unsure re-run this script when done"
@@ -125,6 +126,7 @@ disks(){
     if [[ "$prompt" == "y" || "$prompt" == "Y" || "$prompt" == "yes" || "$prompt" == "Yes" ]]
     then
         clear
+        echo
         echo "3. Disks Setup"
         while ! [[ "$filesystem" =~ ^(1|2)$ ]]
         do
@@ -137,6 +139,7 @@ disks(){
             read -p "> Filesystem (1-2): " filesystem
         done
         clear
+        echo
         echo "3. Disks Setup"
         echo
         echo "Your current partition table:"
@@ -167,6 +170,8 @@ disks(){
                 bootloader=1
                 ;;
             1)
+                clear
+                echo
                 echo "3. Disks Setup"
                 echo
                 echo "Your current partition table:"
@@ -184,19 +189,6 @@ disks(){
                 fi
                 mkdir -p /mnt/boot/efi
                 mount "$efi_partition" /mnt/boot/efi
-                echo
-                clear
-                echo "3. Disks Setup"
-                while ! [[ "$bootloader" =~ ^(1|2)$ ]] 
-                do
-                    echo
-                    echo "Choose a bootloader for your system:"
-                    echo
-                    echo "1. GRUB (the preferred choice for most users)"
-                    echo "2. systemd-boot (for systemd enjoyers)"
-                    echo
-                    read -p "> Bootloader (1-2): " bootloader
-                done
                 ;;
         esac
         echo "3. Disks Setup"
@@ -238,7 +230,7 @@ aur_installer(){
     while ! [[ "$aur_helper" =~ ^(1|2|3)$ ]]
     do
     echo
-    echo "4. AUR Installer"
+    echo "5. AUR Installer"
     echo
     echo "Choose an AUR helper for your system:"
     echo
@@ -252,7 +244,7 @@ aur_installer(){
         1)
             clear
             echo
-            echo "4. AUR Installer"
+            echo "5. AUR Installer"
             echo
             echo "Installing Yay..."
             echo
@@ -261,7 +253,7 @@ aur_installer(){
         2)
             clear
             echo
-            echo "4. AUR Installer"
+            echo "5. AUR Installer"
             echo
             echo "Installing Paru..."
             echo
@@ -278,14 +270,7 @@ arch_installer(){
             pacstrap /mnt base base-devel linux linux-firmware linux-headers grub os-prober sudo bash-completion networkmanager nano reflector xdg-user-dirs
             ;;
         1)
-            case "$bootloader" in
-            1)
-                pacstrap /mnt base base-devel linux linux-firmware linux-headers grub efibootmgr os-prober sudo bash-completion networkmanager nano reflector xdg-user-dirs
-                ;;
-            2)
-                pacstrap /mnt base base-devel linux linux-firmware linux-headers sudo bash-completion networkmanager nano reflector xdg-user-dirs
-                ;;
-            esac
+            pacstrap /mnt base base-devel linux linux-firmware linux-headers grub efibootmgr os-prober sudo bash-completion networkmanager nano reflector xdg-user-dirs
             ;;
     esac
     # Generate fstab with UUID
@@ -305,7 +290,7 @@ arch_installer(){
 	sed -i "93i [multilib]" /mnt/etc/pacman.conf
 	sed -i "94i Include = /etc/pacman.d/mirrorlist" /mnt/etc/pacman.conf
     # Enable Pacman easter egg
-    sed 's/#Color/Color' /mnt/etc/pacman.conf
+    sed -i 's/#Color/Color/' /mnt/etc/pacman.conf
     sed -i '34i ILoveCandy' /mnt/etc/pacman.conf
     # Set hostname
     echo "$hostname" > /mnt/etc/hostname
@@ -316,26 +301,12 @@ arch_installer(){
     case "$uefi_host" in
     0)
         arch-chroot /mnt /bin/bash -c "grub-install --target=i386-pc ${root_partition::-1}"
-        arch-chroot /mnt /bin/bash -c "grub-mkconfig -o /boot/grub/grub.cfg"
         ;;
     1)
-        case "$bootloader" in
-        1)
-            arch-chroot /mnt /bin/bash -c "grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=Arch"
-            arch-chroot /mnt /bin/bash -c "grub-mkconfig -o /boot/grub/grub.cfg"
-            ;;
-        2)
-            arch-chroot /mnt /bin/bash -c "bootctl --path=/boot/efi install"
-            # Get root partition UUID
-            root_uuid=$(lsblk -n -o UUID "$(df -P "$root_partition" | tail -n1 | cut -d' ' -f1)")
-            echo "title   Arch Linux" > /mnt/boot/efi/loader/entries/arch.conf
-            echo "linux   /vmlinuz-linux" >> /mnt/boot/efi/loader/entries/arch.conf
-            echo "initrd  /initramfs-linux.img" >> /mnt/boot/efi/loader/entries/arch.conf
-            echo "options root=PARTUUID=$root_uuid rw" >> /mnt/boot/efi/loader/entries/arch.conf
-            ;;
-        esac
+        arch-chroot /mnt /bin/bash -c "grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=Arch"
         ;;
     esac
+    arch-chroot /mnt /bin/bash -c "grub-mkconfig -o /boot/grub/grub.cfg"
     # Enable Network Manager
 	arch-chroot /mnt /bin/bash -c "systemctl enable NetworkManager.service"
 	# Set root user password
