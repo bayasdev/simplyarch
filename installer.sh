@@ -18,20 +18,31 @@ greeting(){
     echo
 }
 
-# Check whether UEFI or not
-check_uefi(){
+# Gather data about the user's computer
+analyze_host(){
+    echo
+    echo "System Analysis:"
+    echo
+    # Check BIOS type
     if [[ -d /sys/firmware/efi ]]
     then
-        uefi_host=1
-        echo
-        echo "Detected UEFI system..."
-        sleep 3
+        bios_type="uefi"
+        echo "Detected UEFI"
     else
-        uefi_host=0
-        echo
-        echo "Detected Legacy system..."
-        sleep 3
+        bios_type="bios"
+        echo "Detected BIOS"
     fi
+    # Check CPU vendor
+    if [ -n "$(lscpu | grep GenuineIntel)" ]
+    then
+        cpu_vendor="intel"
+        echo "Detected Intel CPU"
+    elif [ -n "$(lscpu | grep AuthenticAMD)" ]
+    then
+        cpu_vendor="amd"
+        echo "Detected AMD CPU"
+    fi
+    sleep 3
 }
 
 # Language & Keyboard setup
@@ -125,6 +136,7 @@ disks(){
     read -p "> Do you want to continue? (Y/N): " prompt
     if [[ "$prompt" == "y" || "$prompt" == "Y" || "$prompt" == "yes" || "$prompt" == "Yes" ]]
     then
+        # Filesystem
         clear
         echo
         echo "3. Disks Setup"
@@ -138,6 +150,7 @@ disks(){
             echo
             read -p "> Filesystem (1-2): " filesystem
         done
+        # Root partition
         clear
         echo
         echo "3. Disks Setup"
@@ -162,35 +175,31 @@ disks(){
                 mkdir /mnt/boot
                 ;;
         esac
+        # EFI only needed for UEFI
+        if [[ "$bios_type" == "uefi" ]]
+        then
         clear
-        # Adapt to user's system accordingly
-        case "$uefi_host" in
-            0)
-                # Use GRUB for Legacy users
-                bootloader=1
-                ;;
-            1)
-                clear
-                echo
-                echo "3. Disks Setup"
-                echo
-                echo "Your current partition table:"
-                echo
-                lsblk
-                echo
-                echo "Write the name of the partition e.g: /dev/sdaX /dev/nvme0n1pX"
-                read -p "> EFI partition: " efi_partition
-                echo
-                echo "HINT: If you're dualbooting another OS type N otherwise Y"
-                read -p "> Do you want to format this EFI partition as FAT32? (Y/N): " format_efi
-                if [[ "$format_efi" == "y" || "$format_efi" == "Y" || "$format_efi" == "yes" || "$format_efi" == "Yes" ]]
-                then
-                    mkfs.fat -F32 "$efi_partition"
-                fi
-                mkdir -p /mnt/boot/efi
-                mount "$efi_partition" /mnt/boot/efi
-                ;;
-        esac
+        echo
+        echo "3. Disks Setup"
+        echo
+        echo "Your current partition table:"
+        echo
+        lsblk
+        echo
+        echo "Write the name of the partition e.g: /dev/sdaX /dev/nvme0n1pX"
+        read -p "> EFI partition: " efi_partition
+        echo
+        echo "HINT: If you're dualbooting another OS type N otherwise Y"
+        read -p "> Do you want to format this EFI partition as FAT32? (Y/N): " format_efi
+        if [[ "$format_efi" == "y" || "$format_efi" == "Y" || "$format_efi" == "yes" || "$format_efi" == "Yes" ]]
+        then
+            mkfs.fat -F32 "$efi_partition"
+        fi
+        mkdir -p /mnt/boot/efi
+        mount "$efi_partition" /mnt/boot/efi
+        fi
+        # Swap
+        clear
         echo "3. Disks Setup"
         echo
         echo "Your current partition table:"
@@ -280,6 +289,7 @@ aur_installer(){
             echo
             echo "Installing Yay..."
             echo
+            arch-chroot /mnt /bin/bash -c "pacman -Sy git --noconfirm --needed"
             echo "cd && git clone https://aur.archlinux.org/yay-bin.git && cd yay-bin && makepkg -si --noconfirm && cd && rm -rf yay-bin" | arch-chroot /mnt /bin/bash -c "su $user"
             ;;
         2)
@@ -289,6 +299,7 @@ aur_installer(){
             echo
             echo "Installing Paru..."
             echo
+            arch-chroot /mnt /bin/bash -c "pacman -Sy git --noconfirm --needed"
             echo "cd && git clone https://aur.archlinux.org/paru-bin.git && cd paru-bin && makepkg -si --noconfirm && cd && rm -rf paru-bin" | arch-chroot /mnt /bin/bash -c "su $user"
             ;;
     esac
@@ -297,12 +308,12 @@ aur_installer(){
 # Performs the actual system install
 arch_installer(){
     # Install the base packages
-    case "$uefi_host" in
-        0)
+    case "$bios_type" in
+        "bios" )
             pacstrap /mnt base base-devel "$kernel_flavor" "$kernel_flavor"-headers linux-firmware grub os-prober sudo bash-completion networkmanager nano reflector xdg-user-dirs
             ;;
-        1)
-            pacstrap /mnt base base-devel "$kernel_flavor" "$kernel_flavor"-headers grub efibootmgr os-prober sudo bash-completion networkmanager nano reflector xdg-user-dirs
+        "uefi" )
+            pacstrap /mnt base base-devel "$kernel_flavor" "$kernel_flavor"-headers linux-firmware grub efibootmgr os-prober sudo bash-completion networkmanager nano reflector xdg-user-dirs
             ;;
     esac
     # Generate fstab with UUID
@@ -329,12 +340,21 @@ arch_installer(){
 	echo "127.0.0.1	localhost" > /mnt/etc/hosts
 	echo "::1		localhost" >> /mnt/etc/hosts
 	echo "127.0.1.1	$hostname.localdomain	$hostname" >> /mnt/etc/hosts
+    # Install appropiate CPU microcode
+    case "$cpu_vendor" in
+        "intel" )
+            arch-chroot /mnt /bin/bash -c "pacman -Sy intel-ucode --noconfirm --needed"
+            ;;
+        "amd" )
+            arch-chroot /mnt /bin/bash -c "pacman -Sy amd-ucode --noconfirm --needed"
+            ;;
+    esac
     # Install bootloader
-    case "$uefi_host" in
-    0)
+    case "$bios_type" in
+    "bios" )
         arch-chroot /mnt /bin/bash -c "grub-install --target=i386-pc ${root_partition::-1}"
         ;;
-    1)
+    "uefi" )
         arch-chroot /mnt /bin/bash -c "grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=Arch"
         ;;
     esac
@@ -384,7 +404,7 @@ read -p "> Do you want to continue? (Y/N): " prompt
 if [[ "$prompt" == "y" || "$prompt" == "Y" || "$prompt" == "yes" || "$prompt" == "Yes" ]]
 then
     clear
-    check_uefi
+    analyze_host
     clear
     locales
     clear
