@@ -1,14 +1,14 @@
 #!/bin/bash
 
-# short URL: https://is.gd/simplyarch
-# see stats at: https://is.gd/stats.php?url=simplyarch
+# Short URL for this script: https://is.gd/simplyarch
+# See SimplyArch usage stats at: https://is.gd/stats.php?url=simplyarch
 
 clear
-echo "SimplyArch bootstrapper..."
+echo "SimplyArch Installer will start in a few seconds..."
 echo
 pacman -Sy glibc --noconfirm
 pacman -S git --noconfirm
 git clone https://github.com/geminis3/simplyarch
-cd simplyarch
-chmod +x simplyarch.sh
-./simplyarch.sh
+cd simplyarch || exit
+chmod +x installer.sh
+./installer.sh
