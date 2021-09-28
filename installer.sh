@@ -217,6 +217,38 @@ disks(){
     fi
 }
 
+# Allow user to select the kernel of their choice
+kernel_selector(){
+    while ! [[ "$kernel_flavor" =~ ^(1|2|3|4)$ ]]
+    do
+    echo
+    echo "4. Kernel Selector"
+    echo
+    echo "Choose a kernel for your system:"
+    echo
+    echo "1. linux (the preferred choice for most users)"
+    echo "2. linux-lts (a long-term supported kernel)"
+    echo "3. linux-zen (a performance focused kernel)"
+    echo "4. linux-hardened (a security focused kernel)"
+    echo
+    read -p "> Kernel flavor (1-4): " kernel_flavor
+    done
+    case "$kernel_flavor" in
+        1)
+            kernel_flavor="linux"
+            ;;
+        2)
+            kernel_flavor="linux-lts"
+            ;;
+        3)
+            kernel_flavor="linux-zen"
+            ;;
+        4)
+            kernel_flavor="linux-hardened"
+            ;;
+    esac
+}
+
 # Run reflector and fetch the 10 fastests mirrors
 update_mirrors(){
     echo
@@ -267,10 +299,10 @@ arch_installer(){
     # Install the base packages
     case "$uefi_host" in
         0)
-            pacstrap /mnt base base-devel linux linux-firmware linux-headers grub os-prober sudo bash-completion networkmanager nano reflector xdg-user-dirs
+            pacstrap /mnt base base-devel "$kernel_flavor" "$kernel_flavor"-headers linux-firmware grub os-prober sudo bash-completion networkmanager nano reflector xdg-user-dirs
             ;;
         1)
-            pacstrap /mnt base base-devel linux linux-firmware linux-headers grub efibootmgr os-prober sudo bash-completion networkmanager nano reflector xdg-user-dirs
+            pacstrap /mnt base base-devel "$kernel_flavor" "$kernel_flavor"-headers grub efibootmgr os-prober sudo bash-completion networkmanager nano reflector xdg-user-dirs
             ;;
     esac
     # Generate fstab with UUID
@@ -359,6 +391,8 @@ then
     user_accounts
     clear
     disks
+    clear
+    kernel_selector
     clear
     update_mirrors
     clear
