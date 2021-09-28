@@ -305,7 +305,7 @@ arch_installer(){
 	sed -i "93i [multilib]" /mnt/etc/pacman.conf
 	sed -i "94i Include = /etc/pacman.d/mirrorlist" /mnt/etc/pacman.conf
     # Enable Pacman easter egg
-    sed -i 's/#Color/Color' /mnt/etc/pacman.conf
+    sed 's/#Color/Color' /mnt/etc/pacman.conf
     sed -i '34i ILoveCandy' /mnt/etc/pacman.conf
     # Set hostname
     echo "$hostname" > /mnt/etc/hostname
@@ -316,14 +316,22 @@ arch_installer(){
     case "$uefi_host" in
     0)
         arch-chroot /mnt /bin/bash -c "grub-install --target=i386-pc ${root_partition::-1}"
+        arch-chroot /mnt /bin/bash -c "grub-mkconfig -o /boot/grub/grub.cfg"
         ;;
     1)
         case "$bootloader" in
         1)
             arch-chroot /mnt /bin/bash -c "grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=Arch"
+            arch-chroot /mnt /bin/bash -c "grub-mkconfig -o /boot/grub/grub.cfg"
             ;;
         2)
             arch-chroot /mnt /bin/bash -c "bootctl --path=/boot/efi install"
+            # Get root partition UUID
+            root_uuid=$(lsblk -n -o UUID "$(df -P "$root_partition" | tail -n1 | cut -d' ' -f1)")
+            echo "title   Arch Linux" > /mnt/boot/efi/loader/entries/arch.conf
+            echo "linux   /vmlinuz-linux" >> /mnt/boot/efi/loader/entries/arch.conf
+            echo "initrd  /initramfs-linux.img" >> /mnt/boot/efi/loader/entries/arch.conf
+            echo "options root=PARTUUID=$root_uuid rw" >> /mnt/boot/efi/loader/entries/arch.conf
             ;;
         esac
         ;;
