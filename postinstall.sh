@@ -177,7 +177,7 @@ de_installer(){
 
 # Install Software
 app_installer(){
-    while ! [[ "$app" =~ ^(15)$ ]] 
+    while ! [[ "$app" =~ ^(25)$ ]] 
 do
     clear
     echo
