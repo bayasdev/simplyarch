@@ -399,6 +399,8 @@ goodbye(){
 # Main menu
 main_menu(){
     clear
+    # Reset menu flag
+    option=0
     while ! [[ "$option" =~ ^(1|2|3|4)$ ]]
     do
     echo
