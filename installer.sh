@@ -1,8 +1,11 @@
 #!/bin/bash
 
-# WARNING: THIS SCRIPT USES RELATIVE FILE PATHS SO IT MUST BE RUN FROM THE SAME WORKING DIRECTORY AS THE CLONED REPO
+# This is the core script used by SimplyArch Installer
+# Copyright (C) The SimplyArch Authors
 
-# Function declaration
+# Released under the MIT license
+
+# Function declaration begins
 
 # Message displayed to user at start
 greeting(){
@@ -376,6 +379,7 @@ arch_installer(){
     aur_installer
 }
 
+# Byeeeeee
 goodbye(){
     echo
     echo "Thank you for using SimplyArch Installer!"
@@ -396,7 +400,9 @@ goodbye(){
     fi
 }
 
-# Execution
+# Function declaration ends
+
+# Execution order
 
 clear
 greeting
