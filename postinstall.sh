@@ -161,10 +161,10 @@ de_installer(){
     # Install VM drivers
     case "$vm" in
         "kvm" )
-            arch-chroot /mnt /bin/bash -c "pacman -Sy qemu-guest-agent --noconfirm --needed"
+            arch-chroot /mnt /bin/bash -c "pacman -Sy qemu-guest-agent spice-vdagent --noconfirm --needed"
             ;;
         "oracle" )
-            arch-chroot /mnt /bin/bash -c "pacman -Sy virtualbox-guest-utils --noconfirm --needed"
+            arch-chroot /mnt /bin/bash -c "pacman -Sy virtualbox-guest-utils xf86-video-vmware --noconfirm --needed"
             arch-chroot /mnt /bin/bash -c "systemctl enable vboxservice.service"
             ;;
         "vmware" )
@@ -178,132 +178,130 @@ de_installer(){
 # Install Software
 app_installer(){
     while ! [[ "$app" =~ ^(25)$ ]] 
-do
-    clear
-    echo
-    echo "App Installer"
-    echo
-    echo "Available app categories:"
-    echo
-    echo ">>> Browsers"
-    echo
-    echo "1. Google Chrome"
-    echo "2. Firefox"
-    echo "3. Opera"
-    echo "4. Brave"
-    echo "5. Chromium"
-    echo
-    echo ">>> Work & Communication"
-    echo
-    echo "6. LibreOffice Fresh"
-    echo "7. WPS Office"
-    echo "8. OnlyOffice"
-    echo "9. Zoom"
-    echo "10. Microsoft Teams"
-    echo "11. Slack"
-    echo "12. Telegram Desktop"
-    echo
-    echo ">>> Multimedia"	
-    echo
-    echo "13. VLC"
-    echo "14. MPV"
-    echo
-    echo ">>> System Utilities & Software Management"
-    echo
-    echo "15. GParted"
-    echo "16. Timeshift Backup"
-    echo "17. Flatpak"
-    echo "18. Snap"
-    echo "19. Pamac (Manjaro App Store includes Flatpak and Snap)"
-    echo
-    echo ">>> Text Editors"
-    echo
-    echo "20. Visual Studio Code"
-    echo "21. Vim"
-    echo "22. Neovim"
-    echo "23. GNU Emacs"
-    echo "24. Atom"
-    echo
-    echo "25. Return to main menu"
-    read -p "App (1-25): " app
-    case $app in
-        1)
-            arch-chroot /mnt /bin/bash -c "sudo -u $user $aur_helper -S google-chrome --noconfirm --needed"
-            ;;
-        2)
-            arch-chroot /mnt /bin/bash -c "pacman -S firefox --noconfirm --needed"
-            ;;
-        3)
-            arch-chroot /mnt /bin/bash -c "pacman -S opera opera-ffmpeg-codecs --noconfirm --needed"
-            ;;
-        4)
-            arch-chroot /mnt /bin/bash -c "sudo -u $user $aur_helper -S brave-bin --noconfirm --needed"
-            ;;
-        5)
-            arch-chroot /mnt /bin/bash -c "pacman -S chromium --noconfirm --needed"
-            ;;
-        6)
-            arch-chroot /mnt /bin/bash -c "pacman -S libreoffice-fresh --noconfirm --needed"
-            ;;
-        7)
-            arch-chroot /mnt /bin/bash -c "sudo -u $user $aur_helper -S wps-office --noconfirm --needed"
-            ;;
-        8)
-            arch-chroot /mnt /bin/bash -c "sudo -u $user $aur_helper -S onlyoffice-bin --noconfirm --needed"
-            ;;
-        9)
-            arch-chroot /mnt /bin/bash -c "sudo -u $user $aur_helper -S zoom --noconfirm --needed"
-            ;;
-        10)
-            arch-chroot /mnt /bin/bash -c "sudo -u $user $aur_helper -S teams--noconfirm --needed"
-            ;;
-        11)
-            arch-chroot /mnt /bin/bash -c "sudo -u $user $aur_helper -S slack-desktop --noconfirm --needed"
-            ;;
-        12)
-            arch-chroot /mnt /bin/bash -c "pacman -S telegram-desktop --noconfirm --needed"
-            ;;
-        13)
-            arch-chroot /mnt /bin/bash -c "pacman -S vlc --noconfirm --needed"
-            ;;
-        14)
-            arch-chroot /mnt /bin/bash -c "pacman -S mpv --noconfirm --needed"
-            ;;
-        15)
-            arch-chroot /mnt /bin/bash -c "pacman -S gparted --noconfirm --needed"
-            ;;
-        16)
-            arch-chroot /mnt /bin/bash -c "sudo -u $user $aur_helper -S timeshift-bin --noconfirm --needed"
-            ;;
-        17)
-            arch-chroot /mnt /bin/bash -c "pacman -S flatpak --noconfirm --needed"
-            ;;
-        18)
-            arch-chroot /mnt /bin/bash -c "sudo -u $user $aur_helper -S snapd --noconfirm --needed"
-            ;;
-        19)
-            arch-chroot /mnt /bin/bash -c "sudo -u $user $aur_helper -S pamac-all --noconfirm --needed"
-            ;;
-        20)
-            arch-chroot /mnt /bin/bash -c "sudo -u $user $aur_helper -S visual-studio-code-bin --noconfirm --needed"
-            ;;
-        21)
-            arch-chroot /mnt /bin/bash -c "pacman -S vim --noconfirm --needed"
-            ;;
-        22)
-            arch-chroot /mnt /bin/bash -c "pacman -S neovim --noconfirm --needed"
-            ;;
-        23)
-            arch-chroot /mnt /bin/bash -c "pacman -S emacs --noconfirm --needed"
-            ;;
-        24)
-            arch-chroot /mnt /bin/bash -c "pacman -S atom --noconfirm --needed"
-            ;;
-        25)
-            main_menu
-            ;;
-    esac
-done
+    do
+        clear
+        echo
+        echo "App Installer"
+        echo
+        echo "Available app categories:"
+        echo
+        echo ">>> Browsers"
+        echo
+        echo "1. Google Chrome"
+        echo "2. Firefox"
+        echo "3. Opera"
+        echo "4. Brave"
+        echo "5. Chromium"
+        echo
+        echo ">>> Work & Communication"
+        echo
+        echo "6. LibreOffice Fresh"
+        echo "7. WPS Office"
+        echo "8. OnlyOffice"
+        echo "9. Zoom"
+        echo "10. Microsoft Teams"
+        echo "11. Slack"
+        echo "12. Telegram Desktop"
+        echo
+        echo ">>> Multimedia"	
+        echo
+        echo "13. VLC"
+        echo "14. MPV"
+        echo
+        echo ">>> System Utilities & Software Management"
+        echo
+        echo "15. GParted"
+        echo "16. Timeshift Backup"
+        echo "17. Flatpak"
+        echo "18. Snap"
+        echo "19. Pamac (Manjaro App Store includes Flatpak and Snap)"
+        echo
+        echo ">>> Text Editors"
+        echo
+        echo "20. Visual Studio Code"
+        echo "21. Vim"
+        echo "22. Neovim"
+        echo "23. GNU Emacs"
+        echo "24. Atom"
+        echo
+        echo "25. Return to main menu"
+        read -p "App (1-25): " app
+        case $app in
+            1)
+                arch-chroot /mnt /bin/bash -c "sudo -u $user $aur_helper -S google-chrome --noconfirm --needed"
+                ;;
+            2)
+                arch-chroot /mnt /bin/bash -c "pacman -S firefox --noconfirm --needed"
+                ;;
+            3)
+                arch-chroot /mnt /bin/bash -c "pacman -S opera opera-ffmpeg-codecs --noconfirm --needed"
+                ;;
+            4)
+                arch-chroot /mnt /bin/bash -c "sudo -u $user $aur_helper -S brave-bin --noconfirm --needed"
+                ;;
+            5)
+                arch-chroot /mnt /bin/bash -c "pacman -S chromium --noconfirm --needed"
+                ;;
+            6)
+                arch-chroot /mnt /bin/bash -c "pacman -S libreoffice-fresh --noconfirm --needed"
+                ;;
+            7)
+                arch-chroot /mnt /bin/bash -c "sudo -u $user $aur_helper -S wps-office --noconfirm --needed"
+                ;;
+            8)
+                arch-chroot /mnt /bin/bash -c "sudo -u $user $aur_helper -S onlyoffice-bin --noconfirm --needed"
+                ;;
+            9)
+                arch-chroot /mnt /bin/bash -c "sudo -u $user $aur_helper -S zoom --noconfirm --needed"
+                ;;
+            10)
+                arch-chroot /mnt /bin/bash -c "sudo -u $user $aur_helper -S teams--noconfirm --needed"
+                ;;
+            11)
+                arch-chroot /mnt /bin/bash -c "sudo -u $user $aur_helper -S slack-desktop --noconfirm --needed"
+                ;;
+            12)
+                arch-chroot /mnt /bin/bash -c "pacman -S telegram-desktop --noconfirm --needed"
+                ;;
+            13)
+                arch-chroot /mnt /bin/bash -c "pacman -S vlc --noconfirm --needed"
+                ;;
+            14)
+                arch-chroot /mnt /bin/bash -c "pacman -S mpv --noconfirm --needed"
+                ;;
+            15)
+                arch-chroot /mnt /bin/bash -c "pacman -S gparted --noconfirm --needed"
+                ;;
+            16)
+                arch-chroot /mnt /bin/bash -c "sudo -u $user $aur_helper -S timeshift-bin --noconfirm --needed"
+                ;;
+            17)
+                arch-chroot /mnt /bin/bash -c "pacman -S flatpak --noconfirm --needed"
+                ;;
+            18)
+                arch-chroot /mnt /bin/bash -c "sudo -u $user $aur_helper -S snapd --noconfirm --needed"
+                ;;
+            19)
+                arch-chroot /mnt /bin/bash -c "sudo -u $user $aur_helper -S pamac-all --noconfirm --needed"
+                ;;
+            20)
+                arch-chroot /mnt /bin/bash -c "sudo -u $user $aur_helper -S visual-studio-code-bin --noconfirm --needed"
+                ;;
+            21)
+                arch-chroot /mnt /bin/bash -c "pacman -S vim --noconfirm --needed"
+                ;;
+            22)
+                arch-chroot /mnt /bin/bash -c "pacman -S neovim --noconfirm --needed"
+                ;;
+            23)
+                arch-chroot /mnt /bin/bash -c "pacman -S emacs --noconfirm --needed"
+                ;;
+            24)
+                arch-chroot /mnt /bin/bash -c "pacman -S atom --noconfirm --needed"
+                ;;
+        esac
+    done
+    main_menu
 }
 
 # Smart driver installer
