@@ -1,7 +1,14 @@
 #!/bin/bash
 
-# Short URL for this script: https://is.gd/simplyarch
-# See SimplyArch usage stats at: https://is.gd/stats.php?url=simplyarch
+# This script is used to bootstrap SimplyArch Installer
+# Copyright (C) The SimplyArch Authors
+
+# Released under the MIT license
+
+# Usage:
+# curl -L is.gd/simplyarch > run ; sh run
+
+# See our stats at: https://is.gd/stats.php?url=simplyarch
 
 clear
 echo "SimplyArch Installer will start in a few seconds..."
