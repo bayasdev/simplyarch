@@ -64,10 +64,10 @@ analyze_system(){
         echo "Running on a real machine"
     fi
     # Detect AUR helper
-    if [ -n "$(pacman -Qq | grep -i yay)" ]
+    if [ -n "$(arch-chroot /mnt /bin/bash -c "pacman -Qq | grep -i yay")" ]
     then
         aur_helper="yay"
-    elif [ -n "$(pacman -Qq | grep -i paru)" ]
+    elif [ -n "$(arch-chroot /mnt /bin/bash -c "pacman -Qq | grep -i paru")" ]
     then
         aur_helper="paru"
     else
