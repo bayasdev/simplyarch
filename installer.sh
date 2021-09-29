@@ -427,6 +427,9 @@ then
     clear
     arch_installer
     clear
+    chmod +x ./postinstall.sh
+    ./postinstall.sh
+    clear
     goodbye
 else
     echo
