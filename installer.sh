@@ -422,7 +422,7 @@ then
     echo
     echo "Updating mirrors for faster install, please wait..."
     echo
-    sudo -u nobody./bin/rate_mirrors arch | tee /etc/pacman.d/mirrorlist
+    sudo -u nobody ./bin/rate_mirrors arch | tee /etc/pacman.d/mirrorlist
     clear
     arch_installer
     clear
