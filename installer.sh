@@ -370,7 +370,8 @@ arch_installer(){
     clear
     echo
     echo "Updating mirrors for installed system, please wait..."
-    ./bin/rate_mirrors arch | sudo tee /mnt/etc/pacman.d/mirrorlist
+    echo
+    sudo -u nobody ./bin/rate_mirrors arch | tee /mnt/etc/pacman.d/mirrorlist
     # AUR installer
     clear
     aur_installer
@@ -420,7 +421,8 @@ then
     # Update mirrors before install
     echo
     echo "Updating mirrors for faster install, please wait..."
-    ./bin/rate_mirrors arch | sudo tee /etc/pacman.d/mirrorlist
+    echo
+    sudo -u nobody./bin/rate_mirrors arch | tee /etc/pacman.d/mirrorlist
     clear
     arch_installer
     clear
