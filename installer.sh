@@ -409,7 +409,10 @@ then
     clear
     analyze_host
     # Install arch-rate-mirrors
-    cd && git clone https://aur.archlinux.org/rate-mirrors-bin.git && cd rate-mirrors-bin && sudo -u nobody makepkg -si --noconfirm && cd && rm -rf rate-mirrors-bin
+    # dummy user needed to run makepkg inside archiso environment
+    clear
+    useradd -m dummyuser
+    cd && git clone https://aur.archlinux.org/rate-mirrors-bin.git && cd rate-mirrors-bin && sudo -u dummyuser makepkg -si --noconfirm && cd && rm -rf rate-mirrors-bin
     clear
     locales
     clear
