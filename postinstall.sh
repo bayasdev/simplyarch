@@ -225,6 +225,7 @@ app_installer(){
         echo "24. Atom"
         echo
         echo "25. Return to main menu"
+        echo
         read -p "App (1-25): " app
         case $app in
             1)
@@ -444,6 +445,15 @@ if [[ "$prompt" == "y" || "$prompt" == "Y" || "$prompt" == "yes" || "$prompt" ==
 then
     clear
     analyze_system
+    # Install rate-mirrors on user's system
+    clear
+    echo
+    echo "Installing rate-mirrors for convenient mirror updates...."
+    echo "Usage:"
+    echo "rate-mirrors arch | sudo tee /etc/pacman.d/mirrorlist"
+    echo
+    sleep 5
+    arch-chroot /mnt /bin/bash -c "sudo -u $user $aur_helper -S rate-mirrors-bin --noconfirm --needed"
     clear
     main_menu
 else
