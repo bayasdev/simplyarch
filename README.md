@@ -1,83 +1,94 @@
 <p align="center">
 <a href="https://github.com/geminis3/simplyarch">
-	<img src="img/laptop.png" alt="laptop-mockup" height="200">
+	<img src="img/mockup.png" alt="computer" height="200">
 </a>
-<h1 align="center">SimplyArch Installer</h1>
+<h1 align="center">SimplyArch Installer 2</h1>
 <p align="center">
-	The simplest way to install Arch Linux where you choose to bloat or not to bloat
+	⚡ Faster, better ⚡
 </p>
 </p>
 
-### Disclaimer
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED
+## Disclaimer ⚠
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED.
+
 ## Pre-requisites 🔎
-- A working internet connection
-- **Being a somewhat advanced user**
-- A previously partitioned disk
-- **UEFI & BIOS autodetection**
-### Filesystem Support
-- EXT4
-- **(NEW)** Initial BTRFS support (special thanks to [@lenuswalker](https://github.com/lenuswalker))
-## ⚡ How to use it 🚀
-	
-	# Boot latest Arch Linux ISO
-	
-	# Connect to the Internet, if you're using WiFi you can do this
-	iwctl
-	device list
-	station device scan
-	station device get-networks
-	station device connect SSID 
-	
-	# Load your keyboard layout
-	loadkeys us-acentos
-	
-	# Partition your disk with the tool of your choice
-	cfdisk
-	
-	# Run the script and follow on-screen instructions
+
+- A working internet connection.
+- A previously partitioned disk (you can use `cfdisk`, `fdisk`, `parted` or the tool of your preference).
+
+Tip 💡: See reference partition layouts for UEFI and BIOS at the [Arch Linux Wiki](https://wiki.archlinux.org/title/Partitioning#Example_layouts)
+
+## How to use it? 🚀
+
+From a booted [Arch Linux ISO](https://archlinux.org/download) just type:
+
 	curl -L is.gd/simplyarch > run ; sh run
 
-## What the base script will do ✅
-- Install a functional base system
-- Setup your keyboard, locales, timezone and hostname
-- Create a standard user with sudo permissions
-- Install popular utilities such as `vim` `nano` `htop` `neofetch` and our `simple_reflector.sh` tool
-- **(NEW)** Installs `paru` as the AUR helper instead of `yay`
-## What the base script won't do 🚫
-- Install any driver not included within the kernel
-- Install a DE/WM or any GUI application
-- Make questionable choices for you
-## And now what? ❓
-- Choose to `bloat` (optional)
-- Install drivers not included with the kernel if your hardware needs it (e.g. Nvidia, Broadcom, VAAPI, etc)
-- Install `xorg-core`, a DM and the DE/WM of your choice
-- Install any other application you need
-- Profit
-## Introducing `bloat` 🐌
-If you don't like the Arch way of doing stuff with the terminal we have prepared you a **completely optional** and simple post-installation script to help you finish setting up your Arch Linux system by installing a desktop environment, propietary drivers (optional), Flatpak support and more.
+## Main features ✨
 
-![bloat](img/bloat-banner.png)
+### Minimal base OS
 
-### Has SimplyArch become what it swore to destroy?
-- **No**, select None when installation finishes to skip `bloat` and keep rolling 😇
-- The base SimplyArch script **will continue to be a separate component that provides only a minimal system**
-- **ProTip:** Review the choices `bloat.sh` will make for you
-### Supported desktop environments (DE) 🖥️
-- GNOME (minimal install included)
+Only the packages you need to start your Arch Linux journey, nothing you don't!
+
+### Filesystems supported
+
+- EXT4
+- BTRFS (special thanks to [@lenuswalker](https://github.com/lenuswalker))
+
+### Kernel selector
+
+Choose between the officially supported Arch Linux kernel flavors:
+
+- linux
+- linux-lts
+- linux-zen
+- linux-hardened
+
+Learn more at the [Arch Linux Wiki](https://wiki.archlinux.org/title/kernel#Officially_supported_kernels).
+
+### Blazing fast installation
+
+- Powered by the superb [rate-mirrors](https://github.com/westandskif/rate-mirrors) tool and Pacman 6.0 multithreaded downloads.
+- Updated mirrors on installed system for a more pleasing experience.
+
+### Install the AUR helper of your preference
+
+Choose between [Yay](https://github.com/Jguer/yay), [Paru](https://github.com/Morganamilo/paru) or none.
+
+### More secure
+
+Automatic CPU microcode installation to protect you against hardware flaws.
+
+## Completely optional postinstall wizard ⚙ 📦 🖥️
+
+A plain TTY is not enough for you?, we got you covered!
+
+### Desktop environment installer
+
+Choose the one you like the most without fearing for bloated installations, we try to keep them simple.
+
+- GNOME
 - KDE Plasma
 - Xfce
+- MATE
 - LXQt
 - LXDE
 - Cinnamon
-## Project file structure 📁
-- `simplyarch.sh`: our base and main script
-- `simple-reflector.sh`: a simple script that uses the `reflector` tool to fetch an updated list of fastest 20 mirrors, this script gets copied to the home folder on every install for convenience purposes
-- `bloat.sh`: the optional post-installation script
-- `run.sh`: bootsrapper script
-- `README.md`: this file
-- `LICENSE.md`: MIT License
-- `img` folder: as the name says
+- Cutefish
+
+### Automatic VM guest additions installer
+
+Installing Arch Linux inside a VM?, don't worry we can install them for KVM, VirtualBox and VMWare.
+
+### Smart driver installer
+
+Have an Nvidia GPU? Nvidia GPU on laptop? Broadcom WiFi? Intel or AMD GPU and needing VAAPI for hardware acceleration?, our driver installer will take care of those.
+
+### App installer
+
+Choose among 24 browsers, productivity software, system utilities and more.
+
 ## I want to help SimplyArch development 🙋‍♀️🙋‍♂️
-Feel free to open an Issue or Pull Request and I'll be happy to receive any feedback or code improvement
+
+Feel free to open an Issue or Pull Request and I'll be happy to receive any feedback or code improvement.
