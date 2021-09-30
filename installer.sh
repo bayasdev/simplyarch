@@ -366,11 +366,11 @@ arch_installer(){
 	arch-chroot /mnt /bin/bash -c "(echo $user_password ; echo $user_password) | passwd $user"
 	arch-chroot /mnt sed -i 's/# %wheel ALL=(ALL) ALL/%wheel ALL=(ALL) ALL/' /etc/sudoers
 	arch-chroot /mnt /bin/bash -c "xdg-user-dirs-update"
-    # Update mirrors for installer system
+    # Update mirrors for installed system
     clear
     echo
     echo "Updating mirrors for installed system, please wait..."
-    rate-mirrors arch | sudo tee /mnt/etc/pacman.d/mirrorlist
+    ./bin/rate_mirrors arch | sudo tee /mnt/etc/pacman.d/mirrorlist
     # AUR installer
     clear
     aur_installer
@@ -408,11 +408,6 @@ if [[ "$prompt" == "y" || "$prompt" == "Y" || "$prompt" == "yes" || "$prompt" ==
 then
     clear
     analyze_host
-    # Install arch-rate-mirrors
-    # dummy user needed to run makepkg inside archiso environment
-    clear
-    useradd -m dummyuser
-    cd && git clone https://aur.archlinux.org/rate-mirrors-bin.git && cd rate-mirrors-bin && sudo -u dummyuser makepkg -si --noconfirm && cd && rm -rf rate-mirrors-bin
     clear
     locales
     clear
@@ -425,7 +420,7 @@ then
     # Update mirrors before install
     echo
     echo "Updating mirrors for faster install, please wait..."
-    rate-mirrors arch | sudo tee /etc/pacman.d/mirrorlist
+    ./bin/rate_mirrors arch | sudo tee /etc/pacman.d/mirrorlist
     clear
     arch_installer
     clear
