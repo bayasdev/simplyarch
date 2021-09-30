@@ -261,14 +261,6 @@ kernel_selector(){
     esac
 }
 
-# Run reflector and fetch the 10 fastests mirrors
-update_mirrors(){
-    echo
-    echo "Updating mirrors, this can take a while..."
-    echo
-    reflector --verbose --latest 10 --protocol http --protocol https --sort rate --save /etc/pacman.d/mirrorlist
-}
-
 # Install an AUR helper
 aur_installer(){
     while ! [[ "$aur_helper" =~ ^(1|2|3)$ ]]
@@ -376,7 +368,9 @@ arch_installer(){
 	arch-chroot /mnt /bin/bash -c "xdg-user-dirs-update"
     # Update mirrors for installer system
     clear
-    update_mirrors
+    echo
+    echo "Updating mirrors for installed system, please wait..."
+    rate-mirrors arch | sudo tee /mnt/etc/pacman.d/mirrorlist
     # AUR installer
     clear
     aur_installer
@@ -414,6 +408,8 @@ if [[ "$prompt" == "y" || "$prompt" == "Y" || "$prompt" == "yes" || "$prompt" ==
 then
     clear
     analyze_host
+    # Install arch-rate-mirrors
+    cd && git clone https://aur.archlinux.org/rate-mirrors-bin.git && cd rate-mirrors-bin && sudo -u nobody makepkg -si --noconfirm && cd && rm -rf rate-mirrors-bin
     clear
     locales
     clear
@@ -423,7 +419,10 @@ then
     clear
     kernel_selector
     clear
-    update_mirrors
+    # Update mirrors before install
+    echo
+    echo "Updating mirrors for faster install, please wait..."
+    rate-mirrors arch | sudo tee /etc/pacman.d/mirrorlist
     clear
     arch_installer
     clear
