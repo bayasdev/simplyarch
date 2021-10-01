@@ -50,7 +50,7 @@ analyze_system(){
         echo "Detected Nvidia GPU"
     fi
     # Detect Broadcom
-    if [ -n "$(lspci | grep -i broadcom)" ]
+    if (lspci | grep Network | grep Broadcom &> /dev/null)
     then
         broadcom_wifi="true"
         echo "Detected Broadcom WiFi card"
