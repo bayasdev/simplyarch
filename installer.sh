@@ -165,14 +165,12 @@ disks(){
         echo
         echo "Write the name of the partition e.g: /dev/sdaX /dev/nvme0n1pX"
         read -p "> Root partition: " root_partition
-        fs_pkgs=""
         case "$filesystem" in
             1)
                 mkfs.ext4 -f "$root_partition"
                 mount "$root_partition" /mnt
                 ;;
             2)
-                fs_pkgs="btrfs-progs"
                 mkfs.btrfs -f -L "Arch Linux" "$root_partition"
                 mount "$root_partition" /mnt
                 btrfs sub cr /mnt/@
@@ -180,7 +178,6 @@ disks(){
                 mount -o relatime,space_cache=v2,compress=lzo,subvol=@ "$root_partition" /mnt
                 ;;
             3)
-                fs_pkgs="xfsprogs xfsdump"
                 mkfs.xfs -f -m bigtime=1 -L "Arch Linux" "$root_partition"
                 mount "$root_partition" /mnt
                 ;;
@@ -291,10 +288,10 @@ arch_installer(){
     # Install the base packages
     case "$bios_type" in
         "bios" )
-            pacstrap /mnt base base-devel "$kernel_flavor" "$kernel_flavor"-headers linux-firmware grub os-prober sudo bash-completion networkmanager nano xdg-user-dirs ntfs-3g "$fs_pkgs"
+            pacstrap /mnt base base-devel "$kernel_flavor" "$kernel_flavor"-headers linux-firmware grub os-prober sudo bash-completion networkmanager nano xdg-user-dirs ntfs-3g
             ;;
         "uefi" )
-            pacstrap /mnt base base-devel "$kernel_flavor" "$kernel_flavor"-headers linux-firmware grub efibootmgr os-prober sudo bash-completion networkmanager nano xdg-user-dirs ntfs-3g "$fs_pkgs"
+            pacstrap /mnt base base-devel "$kernel_flavor" "$kernel_flavor"-headers linux-firmware grub efibootmgr os-prober sudo bash-completion networkmanager nano xdg-user-dirs ntfs-3g
             ;;
     esac
     # Generate fstab with UUID
@@ -315,6 +312,18 @@ arch_installer(){
 	echo "127.0.0.1	localhost" > /mnt/etc/hosts
 	echo "::1		localhost" >> /mnt/etc/hosts
 	echo "127.0.1.1	$hostname.localdomain	$hostname" >> /mnt/etc/hosts
+    # Update mirrors for installed system
+    clear
+    mirror_updater "after"
+    # Install FS tools
+    case "$filesystem" in
+        2)
+            arch-chroot /mnt /bin/bash -c "pacman -Sy btrfs-progs --noconfirm --needed"
+            ;;
+        3)
+            arch-chroot /mnt /bin/bash -c "pacman -Sy xfsprogs xfsdump --noconfirm --needed"
+            ;;
+    esac
     # Install appropiate CPU microcode
     case "$cpu_vendor" in
         "intel" )
@@ -343,9 +352,6 @@ arch_installer(){
 	arch-chroot /mnt /bin/bash -c "(echo $user_password ; echo $user_password) | passwd $user"
 	arch-chroot /mnt sed -i 's/# %wheel ALL=(ALL) ALL/%wheel ALL=(ALL) ALL/' /etc/sudoers
 	arch-chroot /mnt /bin/bash -c "xdg-user-dirs-update"
-    # Update mirrors for installed system
-    clear
-    mirror_updater "after"
     # AUR installer
     clear
     aur_installer
