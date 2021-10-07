@@ -17,7 +17,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 - A working internet connection.
 - A previously partitioned disk (you can use `cfdisk`, `fdisk`, `parted` or the tool of your preference).
 
-Tip 💡: See reference partition layouts for UEFI and BIOS at the [Arch Linux Wiki](https://wiki.archlinux.org/title/Partitioning#Example_layouts)
+Tip 💡: See reference partition layouts for UEFI and BIOS at the [Arch Linux Wiki](https://wiki.archlinux.org/title/Partitioning#Example_layouts).
 
 ## How to use it? 🚀
 
@@ -35,6 +35,7 @@ Only the packages you need to start your Arch Linux journey, nothing you don't!
 
 - EXT4
 - BTRFS (special thanks to [@lenuswalker](https://github.com/lenuswalker))
+- NEW! XFS (with big timestamps)
 
 ### Kernel selector
 

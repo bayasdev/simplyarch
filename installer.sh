@@ -143,15 +143,16 @@ disks(){
         clear
         echo
         echo "3. Disks Setup"
-        while ! [[ "$filesystem" =~ ^(1|2)$ ]]
+        while ! [[ "$filesystem" =~ ^(1|2|3)$ ]]
         do
             echo
             echo "Choose a filesystem for your root partition:"
             echo
-            echo "1. EXT4 (the preferred choice for most users)"
-            echo "2. BTRFS (a FS with built-in snapshot functionality)"
+            echo "1. EXT4 (the standard choice for most users)"
+            echo "2. BTRFS (a modern copy on write (CoW) filesystem)"
+            echo "3. XFS (a high-performance journaling file system)"
             echo
-            read -p "> Filesystem (1-2): " filesystem
+            read -p "> Filesystem (1-3): " filesystem
         done
         # Root partition
         clear
@@ -175,31 +176,34 @@ disks(){
                 btrfs sub cr /mnt/@
                 umount "$root_partition"
                 mount -o relatime,space_cache=v2,compress=lzo,subvol=@ "$root_partition" /mnt
-                mkdir /mnt/boot
+                ;;
+            3)
+                mkfs.xfs -m bigtime=1 -L "Arch Linux" "$root_partition"
+                mount "$root_partition" /mnt
                 ;;
         esac
         # EFI only needed for UEFI
         if [[ "$bios_type" == "uefi" ]]
-        then
-        clear
-        echo
-        echo "3. Disks Setup"
-        echo
-        echo "Your current partition table:"
-        echo
-        lsblk
-        echo
-        echo "Write the name of the partition e.g: /dev/sdaX /dev/nvme0n1pX"
-        read -p "> EFI partition: " efi_partition
-        echo
-        echo "HINT: If you're dualbooting another OS type N otherwise Y"
-        read -p "> Do you want to format this EFI partition as FAT32? (Y/N): " format_efi
-        if [[ "$format_efi" == "y" || "$format_efi" == "Y" || "$format_efi" == "yes" || "$format_efi" == "Yes" ]]
-        then
-            mkfs.fat -F32 "$efi_partition"
-        fi
-        mkdir -p /mnt/boot/efi
-        mount "$efi_partition" /mnt/boot/efi
+            then
+            clear
+            echo
+            echo "3. Disks Setup"
+            echo
+            echo "Your current partition table:"
+            echo
+            lsblk
+            echo
+            echo "Write the name of the partition e.g: /dev/sdaX /dev/nvme0n1pX"
+            read -p "> EFI partition: " efi_partition
+            echo
+            echo "HINT: If you're dualbooting another OS type N otherwise Y"
+            read -p "> Do you want to format this EFI partition as FAT32? (Y/N): " format_efi
+            if [[ "$format_efi" == "y" || "$format_efi" == "Y" || "$format_efi" == "yes" || "$format_efi" == "Yes" ]]
+            then
+                mkfs.fat -F32 "$efi_partition"
+            fi
+            mkdir -p /mnt/boot/efi
+            mount "$efi_partition" /mnt/boot/efi
         fi
         # Swap
         clear
@@ -338,6 +342,11 @@ arch_installer(){
 	echo "127.0.0.1	localhost" > /mnt/etc/hosts
 	echo "::1		localhost" >> /mnt/etc/hosts
 	echo "127.0.1.1	$hostname.localdomain	$hostname" >> /mnt/etc/hosts
+    # Install XFS tools
+    if [[ "$filesystem" == 3 ]]
+    then
+        arch-chroot /mnt /bin/bash -c "pacman -Sy xfsprogs xfsdump"
+    fi
     # Install appropiate CPU microcode
     case "$cpu_vendor" in
         "intel" )
