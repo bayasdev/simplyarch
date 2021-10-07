@@ -157,14 +157,13 @@ disks(){
         clear
         echo
         echo "3. Disks Setup"
-        echo ">>> Select a Root Partition"
         echo
         echo "Your current partition table:"
         echo
         lsblk
         echo
         echo "Write the name of the partition e.g: /dev/sdaX /dev/nvme0n1pX"
-        read -p "> Select a root partition: " root_partition
+        read -p "> Root partition: " root_partition
         case "$filesystem" in
             1)
                 mkfs.ext4 "$root_partition"
@@ -185,7 +184,6 @@ disks(){
         clear
         echo
         echo "3. Disks Setup"
-        echo ">>> Select an EFI partition"
         echo
         echo "Your current partition table:"
         echo
@@ -203,32 +201,9 @@ disks(){
         mkdir -p /mnt/boot/efi
         mount "$efi_partition" /mnt/boot/efi
         fi
-        # Allow separate /home
-        clear
-        clear
-        echo "3. Disks Setup"
-        echo ">>> Mount a separate home partition (optional)"
-        echo
-        echo "Your current partition table:"
-        echo
-        lsblk
-        echo
-        echo "HINT: If you don't have an existing partition for your /home type N below"
-        echo
-        echo "Write the name of the partition e.g: /dev/sdaX /dev/nvme0n1pX"
-        read -p "> Home partition: " home_partition
-        if [[ "$home_partition" == "n" || "$home_partition" == "N" || "$home_partition" == "no" || "$home_partition" == "No" ]]
-        then
-            echo
-            echo "Separate home partition not selected"
-            sleep 1
-        else
-            mount "$home_partition" /mnt/home
-        fi
         # Swap
         clear
         echo "3. Disks Setup"
-        echo ">>> Select a swap partition"
         echo
         echo "Your current partition table:"
         echo
