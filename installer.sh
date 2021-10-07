@@ -345,7 +345,7 @@ arch_installer(){
     # Install XFS tools
     if [[ "$filesystem" == 3 ]]
     then
-        arch-chroot /mnt /bin/bash -c "pacman -Sy xfsprogs xfsdump"
+        arch-chroot /mnt /bin/bash -c "pacman -Sy xfsprogs xfsdump --noconfirm --needed"
     fi
     # Install appropiate CPU microcode
     case "$cpu_vendor" in
