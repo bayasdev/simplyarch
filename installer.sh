@@ -167,7 +167,7 @@ disks(){
         read -p "> Root partition: " root_partition
         case "$filesystem" in
             1)
-                mkfs.ext4 "$root_partition"
+                mkfs.ext4 -f "$root_partition"
                 mount "$root_partition" /mnt
                 ;;
             2)
@@ -178,7 +178,7 @@ disks(){
                 mount -o relatime,space_cache=v2,compress=lzo,subvol=@ "$root_partition" /mnt
                 ;;
             3)
-                mkfs.xfs -m bigtime=1 -L "Arch Linux" "$root_partition"
+                mkfs.xfs -f -m bigtime=1 -L "Arch Linux" "$root_partition"
                 mount "$root_partition" /mnt
                 ;;
         esac
