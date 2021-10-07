@@ -291,10 +291,10 @@ arch_installer(){
     # Install the base packages
     case "$bios_type" in
         "bios" )
-            pacstrap /mnt base base-devel "$kernel_flavor" "$kernel_flavor"-headers linux-firmware grub os-prober sudo bash-completion networkmanager nano xdg-user-dirs "$fs_pkgs" ntfs-3g
+            pacstrap /mnt base base-devel "$kernel_flavor" "$kernel_flavor"-headers linux-firmware grub os-prober sudo bash-completion networkmanager nano xdg-user-dirs ntfs-3g "$fs_pkgs"
             ;;
         "uefi" )
-            pacstrap /mnt base base-devel "$kernel_flavor" "$kernel_flavor"-headers linux-firmware grub efibootmgr os-prober sudo bash-completion networkmanager nano xdg-user-dirs "$fs_pkgs" ntfs-3g
+            pacstrap /mnt base base-devel "$kernel_flavor" "$kernel_flavor"-headers linux-firmware grub efibootmgr os-prober sudo bash-completion networkmanager nano xdg-user-dirs ntfs-3g "$fs_pkgs"
             ;;
     esac
     # Generate fstab with UUID
