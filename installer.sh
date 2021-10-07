@@ -326,17 +326,8 @@ arch_installer(){
     # Auto-detect timezone
     arch-chroot /mnt /bin/bash -c "ln -sf /usr/share/zoneinfo/$(curl https://ipapi.co/timezone) /etc/localtime"
 	arch-chroot /mnt /bin/bash -c "hwclock --systohc"
-    # Pacman tweaks
-    # Enable multilib
-	sed -i '93d' /mnt/etc/pacman.conf
-	sed -i '94d' /mnt/etc/pacman.conf
-	sed -i "93i [multilib]" /mnt/etc/pacman.conf
-	sed -i "94i Include = /etc/pacman.d/mirrorlist" /mnt/etc/pacman.conf
-    # Enable parallel downloads for faaaast speeds
-    sed -i "s/#ParallelDownloads/ParallelDownloads/" /mnt/etc/pacman.conf
-    # Enable easter egg
-    sed -i 's/#Color/Color/' /mnt/etc/pacman.conf
-    sed -i '34i ILoveCandy' /mnt/etc/pacman.conf
+    # Copy tweaked Pacman config
+    cp ./config/pacman.conf /mnt/etc/pacman.conf
     # Set hostname
     echo "$hostname" > /mnt/etc/hostname
 	echo "127.0.0.1	localhost" > /mnt/etc/hosts
