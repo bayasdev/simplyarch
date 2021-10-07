@@ -165,12 +165,14 @@ disks(){
         echo
         echo "Write the name of the partition e.g: /dev/sdaX /dev/nvme0n1pX"
         read -p "> Root partition: " root_partition
+        fs_pkgs=""
         case "$filesystem" in
             1)
                 mkfs.ext4 -f "$root_partition"
                 mount "$root_partition" /mnt
                 ;;
             2)
+                fs_pkgs="btrfs-progs"
                 mkfs.btrfs -f -L "Arch Linux" "$root_partition"
                 mount "$root_partition" /mnt
                 btrfs sub cr /mnt/@
@@ -178,6 +180,7 @@ disks(){
                 mount -o relatime,space_cache=v2,compress=lzo,subvol=@ "$root_partition" /mnt
                 ;;
             3)
+                fs_pkgs="xfsprogs xfsdump"
                 mkfs.xfs -f -m bigtime=1 -L "Arch Linux" "$root_partition"
                 mount "$root_partition" /mnt
                 ;;
@@ -265,6 +268,89 @@ kernel_selector(){
     esac
 }
 
+# Update mirrors, accepted values: before, after
+mirror_updater(){
+    case $1 in
+        "before" )
+            echo
+            echo "Updating mirrors for faster install, please wait..."
+            echo
+            sudo -u nobody ./bin/rate_mirrors arch | tee /etc/pacman.d/mirrorlist
+            ;;
+        "after" )
+            echo
+            echo "Updating mirrors for installed system, please wait..."
+            echo
+            sudo -u nobody ./bin/rate_mirrors arch | tee /mnt/etc/pacman.d/mirrorlist
+            ;;
+    esac
+}
+
+# Performs the actual system install
+arch_installer(){
+    # Install the base packages
+    case "$bios_type" in
+        "bios" )
+            pacstrap /mnt base base-devel "$kernel_flavor" "$kernel_flavor"-headers linux-firmware grub os-prober sudo bash-completion networkmanager nano xdg-user-dirs "$fs_pkgs" ntfs-3g
+            ;;
+        "uefi" )
+            pacstrap /mnt base base-devel "$kernel_flavor" "$kernel_flavor"-headers linux-firmware grub efibootmgr os-prober sudo bash-completion networkmanager nano xdg-user-dirs "$fs_pkgs" ntfs-3g
+            ;;
+    esac
+    # Generate fstab with UUID
+    genfstab -U /mnt >> /mnt/etc/fstab
+    # Set language
+    echo "$language.UTF-8 UTF-8" > /mnt/etc/locale.gen
+	arch-chroot /mnt /bin/bash -c "locale-gen"
+	echo "LANG=$language.UTF-8" > /mnt/etc/locale.conf
+    # Set keyboard
+    echo "KEYMAP=$keyboard" > /mnt/etc/vconsole.conf
+    # Auto-detect timezone
+    arch-chroot /mnt /bin/bash -c "ln -sf /usr/share/zoneinfo/$(curl https://ipapi.co/timezone) /etc/localtime"
+	arch-chroot /mnt /bin/bash -c "hwclock --systohc"
+    # Copy tweaked Pacman config
+    cp ./config/pacman.conf /mnt/etc/pacman.conf
+    # Set hostname
+    echo "$hostname" > /mnt/etc/hostname
+	echo "127.0.0.1	localhost" > /mnt/etc/hosts
+	echo "::1		localhost" >> /mnt/etc/hosts
+	echo "127.0.1.1	$hostname.localdomain	$hostname" >> /mnt/etc/hosts
+    # Install appropiate CPU microcode
+    case "$cpu_vendor" in
+        "intel" )
+            arch-chroot /mnt /bin/bash -c "pacman -Sy intel-ucode --noconfirm --needed"
+            ;;
+        "amd" )
+            arch-chroot /mnt /bin/bash -c "pacman -Sy amd-ucode --noconfirm --needed"
+            ;;
+    esac
+    # Install bootloader
+    case "$bios_type" in
+    "bios" )
+        arch-chroot /mnt /bin/bash -c "grub-install --target=i386-pc ${root_partition::-1}"
+        ;;
+    "uefi" )
+        arch-chroot /mnt /bin/bash -c "grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=Arch"
+        ;;
+    esac
+    arch-chroot /mnt /bin/bash -c "grub-mkconfig -o /boot/grub/grub.cfg"
+    # Enable Network Manager
+	arch-chroot /mnt /bin/bash -c "systemctl enable NetworkManager.service"
+	# Set root user password
+	arch-chroot /mnt /bin/bash -c "(echo $root_password ; echo $root_password) | passwd root"
+	# Setup user
+	arch-chroot /mnt /bin/bash -c "useradd -m -G wheel $user"
+	arch-chroot /mnt /bin/bash -c "(echo $user_password ; echo $user_password) | passwd $user"
+	arch-chroot /mnt sed -i 's/# %wheel ALL=(ALL) ALL/%wheel ALL=(ALL) ALL/' /etc/sudoers
+	arch-chroot /mnt /bin/bash -c "xdg-user-dirs-update"
+    # Update mirrors for installed system
+    clear
+    mirror_updater "after"
+    # AUR installer
+    clear
+    aur_installer
+}
+
 # Install an AUR helper
 aur_installer(){
     while ! [[ "$aur_helper" =~ ^(1|2|3)$ ]]
@@ -304,79 +390,6 @@ aur_installer(){
     esac
 }
 
-# Performs the actual system install
-arch_installer(){
-    # Install the base packages
-    case "$bios_type" in
-        "bios" )
-            pacstrap /mnt base base-devel "$kernel_flavor" "$kernel_flavor"-headers linux-firmware grub os-prober sudo bash-completion networkmanager nano reflector xdg-user-dirs
-            ;;
-        "uefi" )
-            pacstrap /mnt base base-devel "$kernel_flavor" "$kernel_flavor"-headers linux-firmware grub efibootmgr os-prober sudo bash-completion networkmanager nano reflector xdg-user-dirs
-            ;;
-    esac
-    # Generate fstab with UUID
-    genfstab -U /mnt >> /mnt/etc/fstab
-    # Set language
-    echo "$language.UTF-8 UTF-8" > /mnt/etc/locale.gen
-	arch-chroot /mnt /bin/bash -c "locale-gen"
-	echo "LANG=$language.UTF-8" > /mnt/etc/locale.conf
-    # Set keyboard
-    echo "KEYMAP=$keyboard" > /mnt/etc/vconsole.conf
-    # Auto-detect timezone
-    arch-chroot /mnt /bin/bash -c "ln -sf /usr/share/zoneinfo/$(curl https://ipapi.co/timezone) /etc/localtime"
-	arch-chroot /mnt /bin/bash -c "hwclock --systohc"
-    # Copy tweaked Pacman config
-    cp ./config/pacman.conf /mnt/etc/pacman.conf
-    # Set hostname
-    echo "$hostname" > /mnt/etc/hostname
-	echo "127.0.0.1	localhost" > /mnt/etc/hosts
-	echo "::1		localhost" >> /mnt/etc/hosts
-	echo "127.0.1.1	$hostname.localdomain	$hostname" >> /mnt/etc/hosts
-    # Install XFS tools
-    if [[ "$filesystem" == 3 ]]
-    then
-        arch-chroot /mnt /bin/bash -c "pacman -Sy xfsprogs xfsdump --noconfirm --needed"
-    fi
-    # Install appropiate CPU microcode
-    case "$cpu_vendor" in
-        "intel" )
-            arch-chroot /mnt /bin/bash -c "pacman -Sy intel-ucode --noconfirm --needed"
-            ;;
-        "amd" )
-            arch-chroot /mnt /bin/bash -c "pacman -Sy amd-ucode --noconfirm --needed"
-            ;;
-    esac
-    # Install bootloader
-    case "$bios_type" in
-    "bios" )
-        arch-chroot /mnt /bin/bash -c "grub-install --target=i386-pc ${root_partition::-1}"
-        ;;
-    "uefi" )
-        arch-chroot /mnt /bin/bash -c "grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=Arch"
-        ;;
-    esac
-    arch-chroot /mnt /bin/bash -c "grub-mkconfig -o /boot/grub/grub.cfg"
-    # Enable Network Manager
-	arch-chroot /mnt /bin/bash -c "systemctl enable NetworkManager.service"
-	# Set root user password
-	arch-chroot /mnt /bin/bash -c "(echo $root_password ; echo $root_password) | passwd root"
-	# Setup user
-	arch-chroot /mnt /bin/bash -c "useradd -m -G wheel $user"
-	arch-chroot /mnt /bin/bash -c "(echo $user_password ; echo $user_password) | passwd $user"
-	arch-chroot /mnt sed -i 's/# %wheel ALL=(ALL) ALL/%wheel ALL=(ALL) ALL/' /etc/sudoers
-	arch-chroot /mnt /bin/bash -c "xdg-user-dirs-update"
-    # Update mirrors for installed system
-    clear
-    echo
-    echo "Updating mirrors for installed system, please wait..."
-    echo
-    sudo -u nobody ./bin/rate_mirrors arch | tee /mnt/etc/pacman.d/mirrorlist
-    # AUR installer
-    clear
-    aur_installer
-}
-
 # Byeeeeee
 goodbye(){
     echo
@@ -400,35 +413,41 @@ goodbye(){
 
 # Function declaration ends
 
-# Execution order
+# Main execution
 
 clear
+# Welcome
 greeting
 read -p "> Do you want to continue? (Y/N): " prompt
 if [[ "$prompt" == "y" || "$prompt" == "Y" || "$prompt" == "yes" || "$prompt" == "Yes" ]]
 then
+    # Preparation
     clear
     analyze_host
+    # Locale setup
     clear
     locales
+    # User setup
     clear
     user_accounts
+    # Disk setup
     clear
     disks
+    # Kernel selector
     clear
     kernel_selector
-    clear
     # Update mirrors before install
-    echo
-    echo "Updating mirrors for faster install, please wait..."
-    echo
-    sudo -u nobody ./bin/rate_mirrors arch | tee /etc/pacman.d/mirrorlist
+    clear
+    mirror_updater "before"
+    # Perform install
     clear
     arch_installer
+    # Call postinstall
     clear
     chmod +x ./postinstall.sh
     ./postinstall.sh
     clear
+    # End
     goodbye
 else
     echo

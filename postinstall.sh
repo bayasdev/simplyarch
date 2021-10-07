@@ -175,6 +175,90 @@ de_installer(){
     driver_installer
 }
 
+# Smart driver installer
+driver_installer(){
+    # Nvidia
+    if [ "$nvidia_gpu" == "true" ]
+    then
+        clear
+        echo
+        echo "Nvidia Driver Installer"
+        echo
+        echo "Detected Nvidia GPU"
+        echo
+        read -p "> Would you like to install the propietary Nvidia drivers? (Y/N): " prompt
+        if [[ "$prompt" == "y" || "$prompt" == "Y" || "$prompt" == "yes" || "$prompt" == "Yes" ]]
+        then
+            arch-chroot /mnt /bin/bash -c "pacman -S nvidia-dkms nvidia-utils egl-wayland vdpauinfo --noconfirm --needed"
+            # Optimus
+            if [[ "$intel_gpu" == "true" || "$amd_gpu" == "true"  ]]
+            then
+                clear
+                echo
+                echo "Dual-GPU system detected (Optimus Hybrid Graphics support)"
+                echo
+                echo "Optimus Manager is NOT recommended on Turing (RTX) or newer cards that implement native power management"
+                echo "See Nvidia documentation at https://bit.ly/3F59nr2"
+                echo
+                read -p "> Would you like to install Optimus Manager? (Y/N): " prompt
+                if [[ "$prompt" == "y" || "$prompt" == "Y" || "$prompt" == "yes" || "$prompt" == "Yes" ]]
+                then
+                arch-chroot /mnt /bin/bash -c "sudo -u $user $aur_helper -S optimus-manager optimus-manager-qt --noconfirm --needed"
+                fi
+            fi
+        fi
+    fi
+    # Broadcom
+    if [ "$broadcom_wifi" == "true" ]
+    then
+        clear
+        echo
+        echo "Broadcom Driver Installer"
+        echo
+        echo "Detected Broadcom WiFi"
+        echo
+        read -p "> Would you like to install the propietary Broadcom drivers? (Y/N): " prompt
+        if [[ "$prompt" == "y" || "$prompt" == "Y" || "$prompt" == "yes" || "$prompt" == "Yes" ]]
+        then
+            arch-chroot /mnt /bin/bash -c "pacman -S broadcom-wl-dkms --noconfirm --needed"
+        fi
+    fi
+    # Intel
+    if [ "$intel_gpu" == "true" ]
+    then
+        clear
+        echo
+        echo "Intel VAAPI Driver Installer"
+        echo
+        echo "Recommended for GPU accelerated video decode on supported applications"
+        echo "For more information see the Arch Wiki entry at https://bit.ly/3zUBDsD"
+        echo
+        read -p "> Would you like to install Intel VAAPI drivers? (Y/N): " prompt
+        if [[ "$prompt" == "y" || "$prompt" == "Y" || "$prompt" == "yes" || "$prompt" == "Yes" ]]
+        then
+            arch-chroot /mnt /bin/bash -c "pacman -S libva-intel-driver intel-media-driver vainfo --noconfirm --needed"
+        fi
+    fi
+    # AMD
+    if [ "$amd_gpu" == "true" ]
+    then
+        clear
+        echo
+        echo "AMD VAAPI/VDPAU Driver Installer"
+        echo
+        echo "Recommended for GPU accelerated video decode on supported applications"
+        echo "For more information see the Arch Wiki entry at https://bit.ly/3zUBDsD"
+        echo
+        read -p "> Would you like to install AMD VAAPI/VDPAU drivers? (Y/N): " prompt
+        if [[ "$prompt" == "y" || "$prompt" == "Y" || "$prompt" == "yes" || "$prompt" == "Yes" ]]
+        then
+            arch-chroot /mnt /bin/bash -c "pacman -S libva-mesa-driver vainfo mesa-vdpau vdpauinfo --noconfirm --needed"
+        fi
+    fi
+    clear
+    app_installer
+}
+
 # Install Software
 app_installer(){
     while ! [[ "$app" =~ ^(25)$ ]] 
@@ -305,90 +389,6 @@ app_installer(){
     main_menu
 }
 
-# Smart driver installer
-driver_installer(){
-    # Nvidia
-    if [ "$nvidia_gpu" == "true" ]
-    then
-        clear
-        echo
-        echo "Nvidia Driver Installer"
-        echo
-        echo "Detected Nvidia GPU"
-        echo
-        read -p "> Would you like to install the propietary Nvidia drivers? (Y/N): " prompt
-        if [[ "$prompt" == "y" || "$prompt" == "Y" || "$prompt" == "yes" || "$prompt" == "Yes" ]]
-        then
-            arch-chroot /mnt /bin/bash -c "pacman -S nvidia-dkms nvidia-utils egl-wayland vdpauinfo --noconfirm --needed"
-            # Optimus
-            if [[ "$intel_gpu" == "true" || "$amd_gpu" == "true"  ]]
-            then
-                clear
-                echo
-                echo "Dual-GPU system detected (Optimus Hybrid Graphics support)"
-                echo
-                echo "Optimus Manager is NOT recommended on Turing (RTX) or newer cards that implement native power management"
-                echo "See Nvidia documentation at https://bit.ly/3F59nr2"
-                echo
-                read -p "> Would you like to install Optimus Manager? (Y/N): " prompt
-                if [[ "$prompt" == "y" || "$prompt" == "Y" || "$prompt" == "yes" || "$prompt" == "Yes" ]]
-                then
-                arch-chroot /mnt /bin/bash -c "sudo -u $user $aur_helper -S optimus-manager optimus-manager-qt --noconfirm --needed"
-                fi
-            fi
-        fi
-    fi
-    # Broadcom
-    if [ "$broadcom_wifi" == "true" ]
-    then
-        clear
-        echo
-        echo "Broadcom Driver Installer"
-        echo
-        echo "Detected Broadcom WiFi"
-        echo
-        read -p "> Would you like to install the propietary Broadcom drivers? (Y/N): " prompt
-        if [[ "$prompt" == "y" || "$prompt" == "Y" || "$prompt" == "yes" || "$prompt" == "Yes" ]]
-        then
-            arch-chroot /mnt /bin/bash -c "pacman -S broadcom-wl-dkms --noconfirm --needed"
-        fi
-    fi
-    # Intel
-    if [ "$intel_gpu" == "true" ]
-    then
-        clear
-        echo
-        echo "Intel VAAPI Driver Installer"
-        echo
-        echo "Recommended for GPU accelerated video decode on supported applications"
-        echo "For more information see the Arch Wiki entry at https://bit.ly/3zUBDsD"
-        echo
-        read -p "> Would you like to install Intel VAAPI drivers? (Y/N): " prompt
-        if [[ "$prompt" == "y" || "$prompt" == "Y" || "$prompt" == "yes" || "$prompt" == "Yes" ]]
-        then
-            arch-chroot /mnt /bin/bash -c "pacman -S libva-intel-driver intel-media-driver vainfo --noconfirm --needed"
-        fi
-    fi
-    # AMD
-    if [ "$amd_gpu" == "true" ]
-    then
-        clear
-        echo
-        echo "AMD VAAPI/VDPAU Driver Installer"
-        echo
-        echo "Recommended for GPU accelerated video decode on supported applications"
-        echo "For more information see the Arch Wiki entry at https://bit.ly/3zUBDsD"
-        echo
-        read -p "> Would you like to install AMD VAAPI/VDPAU drivers? (Y/N): " prompt
-        if [[ "$prompt" == "y" || "$prompt" == "Y" || "$prompt" == "yes" || "$prompt" == "Yes" ]]
-        then
-            arch-chroot /mnt /bin/bash -c "pacman -S libva-mesa-driver vainfo mesa-vdpau vdpauinfo --noconfirm --needed"
-        fi
-    fi
-    clear
-    app_installer
-}
-
 # Byeeeeee
 goodbye(){
     echo
@@ -436,7 +436,7 @@ main_menu(){
 
 # Function declaration ends
 
-# Execution order
+# Main execution
 
 clear
 greeting
@@ -449,6 +449,7 @@ then
     clear
     echo
     echo "Installing rate-mirrors for convenient mirror updates...."
+    echo
     echo "Usage:"
     echo "rate-mirrors arch | sudo tee /etc/pacman.d/mirrorlist"
     echo
