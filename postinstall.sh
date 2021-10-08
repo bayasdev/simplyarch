@@ -236,7 +236,7 @@ driver_installer(){
         read -p "> Would you like to install Intel VAAPI drivers? (Y/N): " prompt
         if [[ "$prompt" == "y" || "$prompt" == "Y" || "$prompt" == "yes" || "$prompt" == "Yes" ]]
         then
-            arch-chroot /mnt /bin/bash -c "pacman -S libva-intel-driver intel-media-driver vainfo --noconfirm --needed"
+            arch-chroot /mnt /bin/bash -c "pacman -S libva-intel-driver intel-media-driver libva-utils --noconfirm --needed"
         fi
     fi
     # AMD
@@ -252,7 +252,7 @@ driver_installer(){
         read -p "> Would you like to install AMD VAAPI/VDPAU drivers? (Y/N): " prompt
         if [[ "$prompt" == "y" || "$prompt" == "Y" || "$prompt" == "yes" || "$prompt" == "Yes" ]]
         then
-            arch-chroot /mnt /bin/bash -c "pacman -S libva-mesa-driver vainfo mesa-vdpau vdpauinfo --noconfirm --needed"
+            arch-chroot /mnt /bin/bash -c "pacman -S libva-mesa-driver libva-utils mesa-vdpau vdpauinfo --noconfirm --needed"
         fi
     fi
     clear
