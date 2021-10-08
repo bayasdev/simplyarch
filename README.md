@@ -23,7 +23,7 @@ Tip 💡: See reference partition layouts for UEFI and BIOS at the [Arch Linux W
 
 From a booted [Arch Linux ISO](https://archlinux.org/download) just type:
 
-	curl -L is.gd/simplyarch > run ; sh run
+	curl -L is.gd/simplyarch > run; sh run
 
 ## Main features ✨
 
