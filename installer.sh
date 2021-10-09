@@ -175,12 +175,10 @@ disks(){
                 mount "$root_partition" /mnt
                 btrfs su cr /mnt/@
                 btrfs su cr /mnt/@home
-                btrfs su cr /mnt/@var
-                btrfs su cr /mnt/@opt
-                btrfs su cr /mnt/@tmp
-                btrfs su cr /mnt/@.snapshots
                 umount "$root_partition"
-                mount -o relatime,space_cache=v2,compress=lzo,subvol=@ "$root_partition" /mnt
+                mount -o noatime,commit=120,compress=zstd,space_cache,subvol=@ "$root_partition" /mnt
+                mkdir /mnt/home
+                mount -o noatime,commit=120,compress=zstd,space_cache,subvol=@home "$root_partition"/mnt/home
                 ;;
             3)
                 mkfs.xfs -f -m bigtime=1 -L "Arch Linux" "$root_partition"
