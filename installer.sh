@@ -178,7 +178,7 @@ disks(){
                 umount "$root_partition"
                 mount -o noatime,commit=120,compress=zstd,space_cache,subvol=@ "$root_partition" /mnt
                 mkdir /mnt/home
-                mount -o noatime,commit=120,compress=zstd,space_cache,subvol=@home "$root_partition"/mnt/home
+                mount -o noatime,commit=120,compress=zstd,space_cache,subvol=@home "$root_partition" /mnt/home
                 ;;
             3)
                 mkfs.xfs -f -m bigtime=1 -L "Arch Linux" "$root_partition"
