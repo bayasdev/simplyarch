@@ -173,7 +173,12 @@ disks(){
             2)
                 mkfs.btrfs -f -L "Arch Linux" "$root_partition"
                 mount "$root_partition" /mnt
-                btrfs sub cr /mnt/@
+                btrfs su cr /mnt/@
+                btrfs su cr /mnt/@home
+                btrfs su cr /mnt/@var
+                btrfs su cr /mnt/@opt
+                btrfs su cr /mnt/@tmp
+                btrfs su cr /mnt/@.snapshots
                 umount "$root_partition"
                 mount -o relatime,space_cache=v2,compress=lzo,subvol=@ "$root_partition" /mnt
                 ;;
