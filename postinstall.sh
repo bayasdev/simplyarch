@@ -105,7 +105,7 @@ de_installer(){
             de_pkgs="gnome-shell gdm gedit gnome-terminal gnome-control-center gnome-tweaks gnome-screenshot gnome-keyring file-roller nautilus nautilus-sendto sushi evince eog gnome-usage gnome-disk-utility adwaita-icon-theme xdg-user-dirs-gtk gvfs gvfs-mtp gvfs-afc gvfs-gphoto2 gvfs-nfs"
             ;;
         2)
-            de_pkgs="plasma-desktop sddm kinfocenter konsole dolphin kinit plasma-nm plasma-pa kscreen powerdevil sddm-kcm kdeconnect dbus-python kio-fuse audiocd-kio gwenview ark okular spectacle print-manager kate plasma-disks breeze-gtk"
+            de_pkgs="plasma-desktop sddm kinfocenter konsole dolphin kinit plasma-nm plasma-pa kscreen powerdevil sddm-kcm kdeconnect dbus-python kio-fuse audiocd-kio gwenview ark okular spectacle print-manager kate plasma-disks breeze-gtk kde-gtk-config xsettingsd"
             ;;
         3)
             de_pkgs="xfce4 parole ristretto thunar-archive-plugin thunar-media-tags-plugin xfce4-battery-plugin xfce4-datetime-plugin xfce4-mount-plugin xfce4-netload-plugin xfce4-notifyd xfce4-pulseaudio-plugin xfce4-screensaver xfce4-screenshooter xfce4-taskmanager xfce4-wavelan-plugin xfce4-weather-plugin xfce4-whiskermenu-plugin xfce4-xkb-plugin file-roller gvfs gvfs-mtp gvfs-afc gvfs-gphoto2 gvfs-nfs gvfs-smb network-manager-applet xed galculator lightdm lightdm-gtk-greeter lightdm-gtk-greeter-settings xdg-user-dirs-gtk"
