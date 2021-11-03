@@ -102,7 +102,7 @@ de_installer(){
     # Packages for each DE
     case $desktop in
         1)
-            de_pkgs="gnome-shell gdm gedit gnome-terminal gnome-control-center gnome-tweaks gnome-screenshot gnome-keyring file-roller nautilus nautilus-sendto sushi evince eog gnome-usage gnome-disk-utility adwaita-icon-theme xdg-user-dirs-gtk gvfs gvfs-mtp gvfs-afc gvfs-gphoto2 gvfs-nfs"
+            de_pkgs="gnome-shell gdm gedit gnome-terminal gnome-control-center gnome-tweaks gnome-screenshot gnome-keyring file-roller nautilus nautilus-sendto sushi evince eog gnome-usage gnome-disk-utility adwaita-icon-theme xdg-desktop-portal gnome-tweaks chrome-gnome-shell power-profiles-daemon gnome-calculator seahorse xdg-user-dirs-gtk gvfs gvfs-mtp gvfs-afc gvfs-gphoto2 gvfs-nfs"
             ;;
         2)
             de_pkgs="plasma-desktop sddm kinfocenter konsole dolphin kinit plasma-nm plasma-pa kscreen powerdevil sddm-kcm kdeconnect dbus-python kio-fuse audiocd-kio gwenview ark okular spectacle print-manager kate plasma-disks breeze-gtk kde-gtk-config xsettingsd"
@@ -130,7 +130,7 @@ de_installer(){
             ;;
     esac
     # Install pkgs + xorg + pulseaudio
-    arch-chroot /mnt /bin/bash -c "pacman -Sy xorg-server $de_pkgs pulseaudio pavucontrol --noconfirm --needed"
+    arch-chroot /mnt /bin/bash -c "pacman -Sy xorg-server $de_pkgs pulseaudio pavucontrol ttf-dejavu --noconfirm --needed"
     # Enable display manager accordingly
     case $desktop in
     1)
