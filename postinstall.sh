@@ -130,7 +130,7 @@ de_installer(){
             ;;
     esac
     # Install pkgs + xorg + pulseaudio
-    arch-chroot /mnt /bin/bash -c "pacman -Sy xorg-server $de_pkgs pulseaudio pavucontrol ttf-dejavu --noconfirm --needed"
+    arch-chroot /mnt /bin/bash -c "sudo -u $user $aur_helper -Sy xorg-server $de_pkgs pulseaudio pavucontrol ttf-dejavu --noconfirm --needed"
     # Enable display manager accordingly
     case $desktop in
     1)
