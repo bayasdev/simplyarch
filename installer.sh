@@ -353,7 +353,7 @@ arch_installer(){
 	# Setup user
 	arch-chroot /mnt /bin/bash -c "useradd -m -G wheel $user"
 	arch-chroot /mnt /bin/bash -c "(echo $user_password ; echo $user_password) | passwd $user"
-	arch-chroot /mnt sed -i 's/# %wheel ALL=(ALL) ALL/%wheel ALL=(ALL) ALL/' /etc/sudoers
+	arch-chroot /mnt sed -i 's/# %wheel ALL=(ALL\(:ALL\)*) ALL/%wheel ALL=(ALL\1) ALL/' /etc/sudoers
 	arch-chroot /mnt /bin/bash -c "xdg-user-dirs-update"
     # AUR installer
     clear
