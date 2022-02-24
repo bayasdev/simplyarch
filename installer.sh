@@ -167,7 +167,7 @@ disks(){
         read -p "> Root partition: " root_partition
         case "$filesystem" in
             1)
-                mkfs.ext4 -f "$root_partition"
+                mkfs.ext4 "$root_partition"
                 mount "$root_partition" /mnt
                 ;;
             2)
